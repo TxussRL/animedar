@@ -1,33 +1,34 @@
+import { useState } from "react";
+import Navbar from "./components/NavBar";
 
-
-export default function App() {
+function App() {
+  const [vista, setVista] = useState("main"); // main | login | register
 
   return (
-    <>
-      <nav className="w-full bg-slate-900">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-slate-100">
+      <Navbar setVista={setVista} />
 
-          <div className="text-xl font-bold text-white">
-            AniMedar
-          </div>
+      <main className="flex justify-center items-center mt-20">
+        {vista === "main" && (
+          <h1 className="text-2xl font-bold text-black">
+            Estás en el MAIN
+          </h1>
+        )}
 
-          <div className="flex gap-4">
-            <button className="text-slate-300 hover:text-white transition">
-              Iniciar sesión
-            </button>
+        {vista === "login" && (
+          <h1 className="text-2xl font-bold text-black">
+            Formulario de Login
+          </h1>
+        )}
 
-            <button className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
-              Registrarse
-            </button>
-          </div>
-
-        </div>
-      </nav>
-
-
-
-    </>
-  )
+        {vista === "register" && (
+          <h1 className="text-2xl font-bold text-black">
+            Formulario de Registro
+          </h1>
+        )}
+      </main>
+    </div>
+  );
 }
 
-
+export default App;
