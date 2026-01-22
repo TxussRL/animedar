@@ -7,7 +7,7 @@ function Navbar({ ponerVista }) {
 
                 <div className="text-xl font-bold text-white cursor-pointer">
                     <Link to="/">
-                        <img src="/src/img/logo.png" alt="Logo" className="h-auto w-28"></img>
+                        <img src="/public/logo.png" alt="Logo" className="h-auto w-28"></img>
                     </Link>
                 </div>
 
