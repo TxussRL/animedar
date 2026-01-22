@@ -1,11 +1,11 @@
 function Navbar({ ponerVista }) {
     return (
-        <nav class="w-full bg-slate-900">
-            <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <nav class="w-full bg-slate-900 shadow-md animate-fade-in">
+            <div class="max-w-7xl mx-auto px-6 py-1 flex justify-between items-center">
 
                 <div className="text-xl font-bold text-white cursor-pointer"
                     onClick={() => ponerVista("main")}>
-                    AniMedar
+                    <img src="/src/img/logo.png" alt="Logo" className="h-auto w-28"></img>
                 </div>
 
                 <div class="flex gap-4">

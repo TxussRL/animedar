@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navbar from "./components/NavBar";
+import Main from "./components/Main";
 
 function App() {
   const [vista, setVista] = useState("main"); // main | login | register
@@ -10,9 +11,7 @@ function App() {
 
       <main className="flex justify-center items-center mt-20">
         {vista === "main" && (
-          <h1 className="text-2xl font-bold text-black">
-            Estás en el MAIN
-          </h1>
+          <Main />
         )}
 
         {vista === "login" && (
