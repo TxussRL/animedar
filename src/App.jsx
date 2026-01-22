@@ -6,7 +6,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Navbar setVista={setVista} />
+      <Navbar ponerVista={setVista} />
 
       <main className="flex justify-center items-center mt-20">
         {vista === "main" && (
