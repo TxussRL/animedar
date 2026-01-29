@@ -1,6 +1,6 @@
 
 
-export default function Main() {
+export default function Inici() {
     return (
         <div className="w-full bg-slate-100">
             <div className="max-w-7xl mx-auto px-6 py-8">
