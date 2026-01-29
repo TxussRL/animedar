@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import Inici from "./components/Inici";
 import Login from "./components/FormIniciarSessio";
+import Register from "./components/FormRegister";
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Inici />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<h1 className="text-2xl font-bold text-black">Formulario de Registro</h1>} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </main>
     </div>
