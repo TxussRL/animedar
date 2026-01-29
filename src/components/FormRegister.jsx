@@ -6,14 +6,31 @@ export default function Register() {
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (password !== confirm) {
             alert("Las contrasenyas no coinciden");
             return;
         }
+
+        const usuario = {
+            email,
+            password
+        };
+
+        const res = await fetch("http://localhost:3000/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(usuario)
+        });
+
+        const data = await res.json();
+        alert(data.message);
     };
+
 
     return (
         <div className="flex items-center justify-center bg-gray-100">
@@ -86,4 +103,4 @@ export default function Register() {
             </form>
         </div>
     );
-}
+};
