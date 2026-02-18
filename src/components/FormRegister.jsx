@@ -15,6 +15,7 @@ export default function Register() {
         }
 
         const usuario = {
+            nom,
             email,
             password
         };
