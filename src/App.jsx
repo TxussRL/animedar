@@ -4,7 +4,7 @@ import Navbar from "./components/NavBar";
 import Inici from "./components/Inici";
 import Login from "./components/FormIniciarSessio";
 import Register from "./components/FormRegister";
-import verifyEmail from "./components/VerifyEmail";
+import VerifyEmail from "./components/VerifyEmail";
 
 function App() {
 
@@ -17,7 +17,7 @@ function App() {
           <Route path="/" element={<Inici />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<verifyEmail />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
         </Routes>
       </main>
     </div>

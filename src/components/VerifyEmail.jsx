@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 
-export default function verifyEmail() {
+export default function VerifyEmail() {
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState("loading");
     const [message, setMessage] = useState("");
