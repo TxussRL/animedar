@@ -5,6 +5,8 @@ export default function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
+    const [message, setMessage] = useState("");
+    const [sent, setSent] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,9 +31,18 @@ export default function Register() {
         });
 
         const data = await res.json();
-        alert(data.message);
+        setMessage(data.message);
+        if (res.ok) setSent(true);
     };
 
+    if (sent) {
+        return (
+            <div>
+                <h2>📧 Revisa el teu correu</h2>
+                <p>Hem enviat un enllaç de verificació a <strong>{email}</strong></p>
+            </div>
+        );
+    }
 
     return (
         <div className="flex items-center justify-center bg-gray-100">
@@ -95,12 +106,14 @@ export default function Register() {
                     />
                 </div>
 
+                {message && <p className="text-center text-sm mt-2 text-gray-600">{message}</p>}
                 <button
                     type="submit"
                     className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
                 >
                     Registrarse
                 </button>
+
             </form>
         </div>
     );
