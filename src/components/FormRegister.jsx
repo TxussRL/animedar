@@ -17,12 +17,12 @@ export default function Register() {
         }
 
         const usuario = {
-            nom,
-            email,
-            password
+            nom_usuari: nom,
+            correu: email,
+            contrasenya: password
         };
 
-        const res = await fetch("http://localhost:3000/register", {
+        const res = await fetch("http://localhost:3000/api/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
