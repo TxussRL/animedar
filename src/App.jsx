@@ -4,7 +4,7 @@ import Navbar from "./components/NavBar";
 import Inici from "./components/Inici";
 import Login from "./components/FormIniciarSessio";
 import Register from "./components/FormRegister";
-import VerifyEmail from "./components/VerifyEmail";
+import VerifyEmail from "./components/verifyEmail";
 
 function App() {
 

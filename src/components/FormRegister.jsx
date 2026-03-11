@@ -106,7 +106,7 @@ export default function Register() {
                     />
                 </div>
 
-                {message && <p className="text-center text-sm mt-2 text-gray-600">{message}</p>}
+                {message && <p className="text-center text-sm mt-2 text-red-600">{message}</p>}
                 <button
                     type="submit"
                     className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
