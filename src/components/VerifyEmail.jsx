@@ -53,7 +53,7 @@ export default function VerifyEmail() {
                     </div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Correu verificat!</h2>
                     <p className="text-gray-600 mb-6">{message}</p>
-                    <Link to="/login" className="inline-block w-full px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition-colors">
+                    <Link to="/auth/login" className="inline-block w-full px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition-colors">
                         Iniciar sessió
                     </Link>
                 </div>
@@ -67,7 +67,7 @@ export default function VerifyEmail() {
                     </div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Error de verificació</h2>
                     <p className="text-gray-600 mb-6">{message}</p>
-                    <Link to="/register" className="inline-block w-full px-6 py-3 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg font-medium transition-colors">
+                    <Link to="/auth/register" className="inline-block w-full px-6 py-3 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg font-medium transition-colors">
                         Tornar al registre
                     </Link>
                 </div>

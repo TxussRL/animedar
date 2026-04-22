@@ -1,2 +1,21 @@
 @import "tailwindcss";
 @import 'tailwind-animations';
+
+html,
+body,
+#root {
+    min-height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0f1923;
+}
+
+#root {
+    min-height: 100vh;
+}
