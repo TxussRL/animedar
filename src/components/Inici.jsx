@@ -29,7 +29,7 @@ function mapStatus(status) {
     return status;
 }
 
-function AnimeCard({ anime }) {
+function AnimeCard({ anime, onClick }) {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -42,9 +42,10 @@ function AnimeCard({ anime }) {
 
     return (
         <div
-            className="group relative flex flex-col rounded-xl overflow-hidden bg-[#1a2634] border border-slate-700/50 hover:border-cyan-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1"
+            className="group relative flex flex-col rounded-xl overflow-hidden bg-[#1a2634] border border-slate-700/50 hover:border-cyan-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 cursor-pointer"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={onClick}
         >
             <div className="relative aspect-[3/4] overflow-hidden">
                 {!imageLoaded && <div className="absolute inset-0 bg-slate-800 animate-pulse"></div>}
@@ -215,13 +216,12 @@ export default function Inici() {
         <div className="w-full bg-[#0f1923]">
             <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img src="/hero-bg.png" alt="" className="w-full h-full object-cover" />
+                    <img src="/hero-bg.png" alt="" className="w-full h-full object-cover [mask-image:linear-gradient(to_bottom,black_55%,black_75%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_55%,black_75%,transparent_100%)]" />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#0f1923]/60 via-[#0f1923]/40 to-[#0f1923]"></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-[#0f1923]/80 via-transparent to-[#0f1923]/80"></div>
                 </div>
 
-                <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px]"></div>
-                <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px]"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0f1923]"></div>
 
                 <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 leading-tight tracking-tight">
@@ -275,7 +275,7 @@ export default function Inici() {
                         <button
                             type="button"
                             onClick={() => navigate("/anime/top-100")}
-                            className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition-all duration-200 hover:bg-cyan-500/20 hover:border-cyan-400/60"
+                            className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition-all duration-200 hover:bg-cyan-500/20 hover:border-cyan-400/60 cursor-pointer"
                         >
                             Ver top 100
                         </button>
@@ -284,7 +284,7 @@ export default function Inici() {
                     {!loading && !error && (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5">
                             {trendingAnime.map((anime) => (
-                                <AnimeCard key={anime.mal_id} anime={anime} />
+                                <AnimeCard key={anime.mal_id} anime={anime} onClick={() => navigate(`/anime/${anime.mal_id}`)} />
                             ))}
                         </div>
                     )}
