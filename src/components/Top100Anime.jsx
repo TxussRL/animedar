@@ -33,18 +33,9 @@ export default function Top100Anime() {
 
     useEffect(() => {
         async function fetchData() {
-            let all = [];
-
-            for (let page = 1; page <= 4; page++) {
-                const res = await fetch(
-                    `http://localhost:3000/api/top/anime?page=${page}&limit=25`
-                );
-                const data = await res.json();
-
-                all.push(...data.data);
-            }
-
-            setTopAnime(all.slice(0, 100));
+            const res = await fetch("http://localhost:3000/api/top/anime/full");
+            const json = await res.json();
+            setTopAnime(json.data);
         }
 
         fetchData();
