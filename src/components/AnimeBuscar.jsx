@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-function SearchCard({ anime }) {
-    const image = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || "/hero-bg.png";
-    const title = anime.title || "Sin titulo";
-    const score = anime.score;
-    const genres = (anime.genres || []).slice(0, 2).map((genre) => genre.name);
+function SearchCard({ anime, onClick }) {
+    const image = anime.coverImage?.large || "/hero-bg.png";
+    const title = anime.title?.english || anime.title?.romaji || "Sin título";
+    const score = anime.meanScore;
+    const genres = (anime.genres || []).slice(0, 2);
 
     return (
-        <article className="group animate-in fade-in slide-in-from-bottom-2 duration-500 overflow-hidden rounded-xl border border-slate-700/70 bg-[#162331] transition-all hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/10">
+        <article
+            className="cursor-pointer group animate-in fade-in slide-in-from-bottom-2 duration-500 overflow-hidden rounded-xl border border-slate-700/70 bg-[#162331] transition-all hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-lg hover:shadow-cyan-500/10"
+            onClick={onClick}
+        >
             <div className="relative aspect-[2/3] overflow-hidden">
                 <img
                     src={image}
@@ -19,7 +22,7 @@ function SearchCard({ anime }) {
 
                 {typeof score === "number" && (
                     <span className="absolute top-2 right-2 rounded-md border border-amber-400/40 bg-black/45 px-2 py-1 text-[11px] font-semibold text-amber-300 backdrop-blur-md">
-                        {score.toFixed(1)}
+                        {(score / 10).toFixed(1)}
                     </span>
                 )}
             </div>
@@ -29,7 +32,7 @@ function SearchCard({ anime }) {
                 <div className="flex flex-wrap gap-1.5">
                     {genres.map((genre) => (
                         <span
-                            key={`${anime.mal_id}-${genre}`}
+                            key={`${anime.id}-${genre}`}
                             className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-medium text-cyan-200"
                         >
                             {genre}
@@ -41,84 +44,66 @@ function SearchCard({ anime }) {
     );
 }
 
-function SearchCardSkeleton() {
-    return (
-        <div className="overflow-hidden rounded-xl border border-slate-700/70 bg-[#162331]">
-            <div className="aspect-[2/3] animate-pulse bg-slate-800" />
-            <div className="space-y-2 p-3">
-                <div className="h-3 w-4/5 animate-pulse rounded bg-slate-700" />
-                <div className="h-3 w-3/5 animate-pulse rounded bg-slate-700" />
-            </div>
-        </div>
-    );
-}
-
 export default function AnimeBuscar() {
+    const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const initialQuery = (searchParams.get("q") || "").trim();
+    const query = (searchParams.get("q") || "").trim();
 
-    const [searchTerm, setSearchTerm] = useState(initialQuery);
+    const [searchTerm, setSearchTerm] = useState(query);
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-    useEffect(() => {
-        setSearchTerm(initialQuery);
-    }, [initialQuery]);
+    const [textoBuscado, setDebouncedTerm] = useState(query);
 
     useEffect(() => {
-        let isMounted = true;
+        const id = setTimeout(() => {
+            setDebouncedTerm(searchTerm.trim());
+            if (!searchTerm.trim()) {
+                setSearchParams({});
+            } else {
+                setSearchParams({ q: searchTerm.trim() });
+            }
+        }, 400);
+
+        return () => clearTimeout(id);
+    }, [searchTerm, setSearchParams]);
+
+    useEffect(() => {
+        const controller = new AbortController();
 
         const fetchAnime = async () => {
+            if (!textoBuscado) {
+                setResults([]);
+                return;
+            }
+
             setLoading(true);
             setError(null);
 
             try {
-                const endpoint = initialQuery
-                    ? `${API_BASE}/api/anime/search?q=${encodeURIComponent(initialQuery)}&page=1&limit=36`
-                    : `${API_BASE}/api/top/anime?page=1&limit=24`;
+                const response = await fetch(
+                    `http://localhost:3000/api/anime/buscar?q=${encodeURIComponent(textoBuscado)}`,
+                    { signal: controller.signal }
+                );
 
-                const response = await fetch(endpoint, { cache: "no-store" });
-                if (!response.ok) {
-                    throw new Error("No se pudo cargar el catalogo");
-                }
+                if (!response.ok) throw new Error("No se pudo cargar el catálogo");
 
                 const json = await response.json();
-                if (isMounted) {
-                    setResults(Array.isArray(json?.data) ? json.data : []);
-                }
+                const newItems = Array.isArray(json?.data) ? json.data : [];
+                setResults(newItems);
             } catch (err) {
-                if (isMounted) {
-                    setResults([]);
+                if (err.name !== "AbortError") {
                     setError(err.message || "Error al buscar anime");
                 }
             } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
+                setLoading(false);
             }
         };
 
         fetchAnime();
 
-        return () => {
-            isMounted = false;
-        };
-    }, [API_BASE, initialQuery]);
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        const term = searchTerm.trim();
-
-        if (!term) {
-            setSearchParams({});
-            return;
-        }
-
-        setSearchParams({ q: term });
-    };
+        return () => controller.abort();
+    }, [textoBuscado]);
 
     return (
         <section className="relative min-h-screen overflow-hidden bg-[#0f1923] px-4 pb-14 pt-28 md:px-8">
@@ -130,13 +115,11 @@ export default function AnimeBuscar() {
                     <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300/80">Explorar</p>
                     <h1 className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">Busca anime a tu estilo</h1>
                     <p className="mt-2 max-w-2xl text-slate-300/80">
-                        {initialQuery
-                            ? `Resultados para "${initialQuery}"`
-                            : "Escribe algo y pulsa Enter para encontrar animes, o explora recomendaciones iniciales."}
+                        {query ? `Resultados para "${query}"` : "Escribe para buscar por título."}
                     </p>
                 </header>
 
-                <form onSubmit={handleSearch} className="mb-8 animate-in fade-in slide-in-from-top-3 duration-500">
+                <form onSubmit={(e) => e.preventDefault()} className="mb-8 animate-in fade-in slide-in-from-top-3 duration-500">
                     <div className="group relative max-w-2xl">
                         <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-cyan-500/50 via-blue-500/35 to-emerald-400/35 opacity-0 blur-sm transition-opacity duration-300 group-focus-within:opacity-100" />
                         <div className="relative flex items-center rounded-2xl border border-slate-700/60 bg-[#152332]/95 backdrop-blur-xl">
@@ -147,7 +130,7 @@ export default function AnimeBuscar() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-slate-500"
-                                placeholder="Busca por titulo..."
+                                placeholder="Busca por título..."
                             />
                         </div>
                     </div>
@@ -159,28 +142,13 @@ export default function AnimeBuscar() {
                     </div>
                 )}
 
-                {loading ? (
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <SearchCardSkeleton key={index} />
-                        ))}
-                    </div>
-                ) : (
-                    <>
-                        {results.length > 0 ? (
-                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-                                {results.map((anime) => (
-                                    <SearchCard key={anime.mal_id} anime={anime} />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="rounded-2xl border border-slate-700/70 bg-[#111c29]/90 p-8 text-center">
-                                <p className="text-lg font-semibold text-slate-200">No hay resultados para esa busqueda</p>
-                                <p className="mt-1 text-sm text-slate-400">Prueba con otro nombre o una palabra mas corta.</p>
-                            </div>
-                        )}
-                    </>
-                )}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+                    {results.map((anime) => (
+                        <SearchCard key={anime.id} anime={anime} onClick={() => navigate(`/anime/${anime.id}`)} />
+                    ))}
+                </div>
+
+                {loading && <p className="mt-6 text-sm text-slate-400">Cargando...</p>}
             </div>
         </section>
     );

@@ -38,16 +38,7 @@ function Navbar({ user, onLogout }) {
                 </svg>
             ),
         },
-        {
-            to: "/anime/social",
-            label: "Social",
-            activePatterns: ["/anime/social"],
-            icon: (
-                <svg className="inline-block w-4 h-4 mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5V9H2v11h5m10 0v-5a3 3 0 00-6 0v5m6 0H9" />
-                </svg>
-            ),
-        },
+
         {
             to: "/anime/forum",
             label: "Forum",

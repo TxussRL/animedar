@@ -23,9 +23,11 @@ const genreMap = {
 };
 
 function mapStatus(status) {
-    if (status === "Currently Airing") return "En emisión";
-    if (status === "Finished Airing") return "Finalizado";
-    if (status === "Not yet aired") return "Próximamente";
+    if (status === "RELEASING") return "En emisión";
+    if (status === "FINISHED") return "Finalizado";
+    if (status === "NOT_YET_RELEASED") return "Próximamente";
+    if (status === "HIATUS") return "En pausa";
+    if (status === "CANCELLED") return "Cancelado";
     return status;
 }
 
@@ -33,12 +35,12 @@ function AnimeCard({ anime, onClick }) {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
-    const title = anime.title;
-    const image = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url;
-    const rating = anime.score;
+    const title = anime.title?.english || anime.title?.romaji || "Sin título";
+    const image = anime.coverImage?.large;
+    const rating = anime.meanScore;
     const episodes = anime.episodes;
     const status = mapStatus(anime.status);
-    const animeGenres = (anime.genres || []).map((g) => genreMap[g.name] || g.name).slice(0, 2);
+    const animeGenres = (anime.genres || []).map((g) => genreMap[g] || g).slice(0, 2);
 
     return (
         <div
@@ -74,7 +76,7 @@ function AnimeCard({ anime, onClick }) {
                 {rating && (
                     <div className="absolute top-3 right-3">
                         <span className="flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-full bg-black/40 backdrop-blur-md text-amber-400 border border-amber-500/20">
-                            {rating.toFixed(1)}
+                            {(rating / 10).toFixed(1)}
                         </span>
                     </div>
                 )}
@@ -124,7 +126,7 @@ function AnimeCardSkeleton() {
 
 export default function Inici() {
     const navigate = useNavigate();
-    const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const API_BASE = "http://localhost:3000";
     const [searchTerm, setSearchTerm] = useState("");
     const [trendingAnime, setTrendingAnime] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -133,53 +135,21 @@ export default function Inici() {
     useEffect(() => {
         let isMounted = true;
 
-        const wait = (ms) => new Promise((resolve) => {
-            setTimeout(resolve, ms);
-        });
-
         const fetchTopAnime = async () => {
             try {
-                if (isMounted) {
-                    setLoading(true);
-                    setError(null);
-                }
+                setLoading(true);
+                setError(null);
 
-                const endpoints = [
-                    `${API_BASE}/api/trending/anime?page=1&limit=8`,
-                    `${API_BASE}/api/top/anime?page=1&limit=8`,
-                ];
+                const res = await fetch(`${API_BASE}/api/trending/anime?page=1&limit=8`, {
+                    cache: "no-store"
+                });
 
-                let lastError = null;
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-                for (const endpoint of endpoints) {
-                    for (let attempt = 1; attempt <= 3; attempt += 1) {
-                        try {
-                            const res = await fetch(endpoint, { cache: "no-store" });
-                            if (!res.ok) {
-                                throw new Error(`HTTP ${res.status}`);
-                            }
+                const json = await res.json();
+                const animeList = Array.isArray(json?.data) ? json.data : [];
 
-                            const json = await res.json();
-                            const animeList = Array.isArray(json?.data) ? json.data : [];
-
-                            if (animeList.length > 0) {
-                                if (isMounted) {
-                                    setTrendingAnime(animeList);
-                                }
-                                return;
-                            }
-
-                            throw new Error("Sin datos disponibles");
-                        } catch (err) {
-                            lastError = err;
-                            if (attempt < 3) {
-                                await wait(300 * attempt);
-                            }
-                        }
-                    }
-                }
-
-                throw lastError || new Error("Error al obtener animes");
+                if (isMounted) setTrendingAnime(animeList);
             } catch (err) {
                 console.error("Error fetching anime:", err);
                 if (isMounted) {
@@ -187,9 +157,7 @@ export default function Inici() {
                     setError(err.message || "Error al obtener animes");
                 }
             } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
+                if (isMounted) setLoading(false);
             }
         };
 
@@ -234,7 +202,6 @@ export default function Inici() {
                         Rastrea, comparte y conecta con otros fans del anime y manga.
                     </p>
 
-                    {/* Buscador: al pulsar Enter redirige a /anime/buscar */}
                     <form className="relative max-w-xl mx-auto mb-8" onSubmit={handleSearchSubmit}>
                         <div className="relative group">
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/50 to-blue-500/50 rounded-2xl blur-sm opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"></div>
@@ -252,12 +219,8 @@ export default function Inici() {
                             </div>
                         </div>
                     </form>
-
-
-
                 </div>
 
-                {/* Explorar */}
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500 group select-none pointer-events-none">
                     <span className="text-xs font-medium tracking-widest uppercase">Explorar</span>
                     <div className="w-6 h-10 rounded-full border-2 border-current flex justify-center pt-2">
@@ -284,7 +247,7 @@ export default function Inici() {
                     {!loading && !error && (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5">
                             {trendingAnime.map((anime) => (
-                                <AnimeCard key={anime.mal_id} anime={anime} onClick={() => navigate(`/anime/${anime.mal_id}`)} />
+                                <AnimeCard key={anime.id} anime={anime} onClick={() => navigate(`/anime/${anime.id}`)} />
                             ))}
                         </div>
                     )}

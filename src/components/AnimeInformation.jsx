@@ -19,7 +19,6 @@ export default function AnimeInformation() {
     const [anime, setAnime] = useState(null);
     const [characters, setCharacters] = useState([]);
     const [staff, setStaff] = useState([]);
-    const [videos, setVideos] = useState(null);
     const [recommendations, setRecommendations] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -35,10 +34,9 @@ export default function AnimeInformation() {
                 const json = await res.json();
 
                 setAnime(json.data?.anime);
-                setCharacters(json.data?.characters);
-                setStaff(json.data?.staff);
-                setVideos(json.data?.videos);
-                setRecommendations(json.data?.recommendations);
+                setCharacters(json.data?.characters || []);
+                setStaff(json.data?.staff || []);
+                setRecommendations(json.data?.recommendations || []);
             } catch (err) {
                 console.error(err);
             } finally {
@@ -47,11 +45,6 @@ export default function AnimeInformation() {
         }
 
         fetchAll();
-
-        return () => {
-            ignore = true;
-            controller.abort();
-        };
     }, [id]);
 
     if (loading) {
@@ -70,14 +63,17 @@ export default function AnimeInformation() {
         );
     }
 
+    const title =
+        anime?.title?.english || anime?.title?.romaji || anime?.title?.native || "Sin título";
+
     return (
         <div className="bg-[#0B0F1A] min-h-screen px-8 md:px-20 py-10 text-white">
             {/* Header */}
             <section className="flex flex-col md:flex-row gap-10 mt-10">
                 <img
                     className="rounded-2xl w-[220px] h-[320px] object-cover"
-                    src={anime?.images?.jpg?.image_url}
-                    alt={anime?.title}
+                    src={anime?.coverImage?.large}
+                    alt={title}
                 />
 
                 <div className="flex flex-col gap-2">
@@ -86,21 +82,21 @@ export default function AnimeInformation() {
                         <span>/</span>
                         <span onClick={() => navigate("/anime/buscar")} className="cursor-pointer hover:text-[#01c6e5]">Buscar</span>
                         <span>/</span>
-                        <span className="text-[#01c6e5]">{anime?.title}</span>
+                        <span className="text-[#01c6e5]">{title}</span>
                     </div>
 
-                    <h1 className="text-3xl font-black">{anime?.title}</h1>
-                    <h2 className="text-gray-500 font-black">{anime?.title_japanese}</h2>
+                    <h1 className="text-3xl font-black">{title}</h1>
+                    <h2 className="text-gray-500 font-black">{anime?.title?.native}</h2>
 
                     <div className="flex flex-wrap gap-3 mt-4">
-                        {anime?.genres?.filter(g => g?.name !== "Award Winning").map((gen, index) => {
+                        {anime?.genres?.map((gen, index) => {
                             const color = colors[index % colors.length];
                             return (
                                 <p
-                                    key={gen?.mal_id}
+                                    key={`${gen}-${index}`}
                                     className={`${color?.text} ${color?.bg} py-1 px-4 rounded-3xl text-xs`}
                                 >
-                                    {gen?.name}
+                                    {gen}
                                 </p>
                             );
                         })}
@@ -121,29 +117,28 @@ export default function AnimeInformation() {
                 <aside className="bg-[#121827] rounded-xl p-4 space-y-3 text-sm">
                     <h3 className="text-white font-semibold">Información</h3>
                     <div className="text-slate-300 space-y-2">
-                        <p><span className="text-white">Título:</span> {anime?.title}</p>
-                        <p><span className="text-white">Tipo:</span> {anime?.type}</p>
+                        <p><span className="text-white">Título:</span> {title}</p>
+                        <p><span className="text-white">Tipo:</span> {anime?.format}</p>
                         <p><span className="text-white">Episodios:</span> {anime?.episodes}</p>
                         <p><span className="text-white">Estado:</span> {anime?.status}</p>
-                        <p><span className="text-white">Temporada:</span> {anime?.season} {anime?.year}</p>
-                        <p><span className="text-white">Emitido:</span> {anime?.aired?.string}</p>
-                        <p><span className="text-white">Estudio:</span> {anime?.studios?.[0]?.name}</p>
-                        <p><span className="text-white">Productores:</span> {anime?.producers?.map(p => p.name).join(", ")}</p>
-                        <p><span className="text-white">Licencias:</span> {anime?.licensors?.map(l => l.name).join(", ")}</p>
+                        <p><span className="text-white">Temporada:</span> {anime?.season} {anime?.seasonYear}</p>
+                        <p><span className="text-white">Estudio:</span> {anime?.studios?.nodes?.[0]?.name}</p>
                     </div>
                 </aside>
 
                 <div className="space-y-6">
                     <div className="bg-[#121827] rounded-xl p-5">
                         <h3 className="font-semibold mb-3">Sinopsis</h3>
-                        <p className="text-slate-300 text-sm leading-6">{anime?.synopsis}</p>
+                        <p
+                            className="text-slate-300 text-sm leading-6"
+                            dangerouslySetInnerHTML={{ __html: anime?.description || "" }}
+                        />
                     </div>
 
                     <div className="bg-[#121827] rounded-xl p-5">
                         <h3 className="font-semibold mb-3">Puntuación de los usuarios</h3>
                         <div className="flex items-center gap-3">
-                            <span className="text-amber-400 font-semibold text-lg">★ {anime?.score}</span>
-                            <span className="text-slate-400 text-sm">{anime?.scored_by?.toLocaleString()} votos</span>
+                            <span className="text-amber-400 font-semibold text-lg">★ {anime?.meanScore ?? "?"}</span>
                         </div>
                     </div>
                 </div>
@@ -156,10 +151,9 @@ export default function AnimeInformation() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {characters.slice(0, 8).map((c) => (
-                        <div key={c?.character?.mal_id} className="bg-[#121827] rounded-xl p-3">
-                            <img className="rounded-lg w-full h-40 object-cover" src={c?.character?.images?.jpg?.image_url} alt={c?.character?.name} />
-                            <p className="text-sm mt-2">{c?.character?.name}</p>
-                            <p className="text-xs text-slate-400">{c?.role}</p>
+                        <div key={c?.id} className="bg-[#121827] rounded-xl p-3">
+                            <img className="rounded-lg w-full h-40 object-cover" src={c?.image?.large} alt={c?.name?.full} />
+                            <p className="text-sm mt-2">{c?.name?.full}</p>
                         </div>
                     ))}
                 </div>
@@ -169,28 +163,15 @@ export default function AnimeInformation() {
             <section className="mt-10">
                 <h3 className="font-semibold mb-4">Staff</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {staff.slice(0, 8).map((s) => (
-                        <div key={s?.person?.mal_id} className="bg-[#121827] rounded-xl p-3">
-                            <img className="rounded-lg w-full h-40 object-cover" src={s?.person?.images?.jpg?.image_url} alt={s?.person?.name} />
-                            <p className="text-sm mt-2">{s?.person?.name}</p>
-                            <p className="text-xs text-slate-400">{s?.positions?.[0]}</p>
+                    {staff.slice(0, 8).map((s, i) => (
+                        <div
+                            key={s?.id ?? `staff-${i}`}
+                            className="bg-[#121827] rounded-xl p-3 cursor-pointer hover:bg-[#1a2a3b] transition"
+                            onClick={() => navigate(`/anime/staff/${s?.id}`)}
+                        >
+                            <img className="rounded-lg w-full h-40 object-cover" src={s?.image?.large} alt={s?.name?.full} />
+                            <p className="text-sm mt-2">{s?.name?.full}</p>
                         </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Videos */}
-            <section className="mt-10">
-                <h3 className="font-semibold mb-4">Videos</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                    {videos?.promo?.slice(0, 2).map((v) => (
-                        <iframe
-                            key={v?.trailer?.youtube_id}
-                            className="w-full h-64 rounded-xl"
-                            src={v?.trailer?.embed_url}
-                            title={v?.title}
-                            allowFullScreen
-                        />
                     ))}
                 </div>
             </section>
@@ -199,10 +180,20 @@ export default function AnimeInformation() {
             <section className="mt-10">
                 <h3 className="font-semibold mb-4">Recomendaciones</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {recommendations.slice(0, 8).map((r) => (
-                        <div key={r?.entry?.mal_id} className="bg-[#121827] rounded-xl p-3 cursor-pointer hover:bg-[#1a2a3b] transition" onClick={() => navigate(`/anime/${r.entry.mal_id}`)}>
-                            <img className="rounded-lg w-full h-40 object-cover" src={r?.entry?.images?.jpg?.image_url} alt={r?.entry?.title} />
-                            <p className="text-sm mt-2">{r?.entry?.title}</p>
+                    {recommendations.slice(0, 8).map((r, i) => (
+                        <div
+                            key={r?.mediaRecommendation?.id ?? `rec-${i}`}
+                            className="bg-[#121827] rounded-xl p-3 cursor-pointer hover:bg-[#1a2a3b] transition"
+                            onClick={() => navigate(`/anime/${r?.mediaRecommendation?.id}`)}
+                        >
+                            <img
+                                className="rounded-lg w-full h-40 object-cover"
+                                src={r?.mediaRecommendation?.coverImage?.large}
+                                alt={r?.mediaRecommendation?.title?.romaji}
+                            />
+                            <p className="text-sm mt-2">
+                                {r?.mediaRecommendation?.title?.english || r?.mediaRecommendation?.title?.romaji}
+                            </p>
                         </div>
                     ))}
                 </div>

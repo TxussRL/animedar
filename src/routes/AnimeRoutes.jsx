@@ -3,6 +3,7 @@ import Inici from "../components/Inici";
 import AnimeBuscar from "../components/AnimeBuscar";
 import Top100Anime from "../components/Top100Anime";
 import AnimeInformation from "../components/AnimeInformation"
+import StaffInformation from "../components/StaffInformation"
 
 function AnimeRoutes({ user }) {
     return (
@@ -15,6 +16,7 @@ function AnimeRoutes({ user }) {
             <Route path="social" element={<Inici user={user} />} />
             <Route path="forum" element={<Inici user={user} />} />
             <Route path=":id" element={<AnimeInformation user={user} />} />
+            <Route path="staff/:personId" element={<StaffInformation user={user} />} />
             <Route path="*" element={<Navigate to="buscar" replace />} />
         </Routes>
     );

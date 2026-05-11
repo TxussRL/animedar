@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function RowCard({ anime, rank, onClick }) {
+    const title = anime.title?.english || anime.title?.romaji || "Sin título";
+
     return (
         <div
             onClick={onClick}
@@ -12,15 +14,15 @@ function RowCard({ anime, rank, onClick }) {
             </span>
 
             <img
-                src={anime.images?.jpg?.image_url}
-                alt={anime.title}
+                src={anime.coverImage?.large}
+                alt={title}
                 className="w-16 h-20 object-cover rounded-lg"
             />
 
             <div>
-                <h2 className="text-white font-bold">{anime.title}</h2>
+                <h2 className="text-white font-bold">{title}</h2>
                 <p className="text-yellow-400 text-sm">
-                    ⭐ {anime.score || "?"}
+                    ⭐ {anime.meanScore ?? "?"}
                 </p>
             </div>
         </div>
@@ -50,10 +52,10 @@ export default function Top100Anime() {
             <div className="flex flex-col gap-3">
                 {topAnime.map((anime, index) => (
                     <RowCard
-                        key={anime.mal_id}
+                        key={anime.id}
                         anime={anime}
                         rank={index + 1}
-                        onClick={() => navigate(`/anime/${anime.mal_id}`)}
+                        onClick={() => navigate(`/anime/${anime.id}`)}
                     />
                 ))}
             </div>

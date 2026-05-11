@@ -4,6 +4,7 @@ import Navbar from "./components/NavBar";
 import Inici from "./components/Inici";
 import AuthRoutes from "./routes/AuthRoutes";
 import AnimeRoutes from "./routes/AnimeRoutes";
+import Footer from "./components/Footer";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -63,6 +64,8 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+      <Footer />
     </div>
   );
 }
