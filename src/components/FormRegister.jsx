@@ -8,32 +8,35 @@ export default function Register() {
     const [message, setMessage] = useState("");
     const [sent, setSent] = useState(false);
 
+
+    const isStrongPassword = (pass) => {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(pass);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (password !== confirm) {
-            alert("Las contrasenyas no coinciden");
+        if (!isStrongPassword(password)) {
+            alert("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.");
             return;
         }
 
-        const usuario = {
-            nom_usuari: nom,
-            correu: email,
-            contrasenya: password
-        };
+        if (password !== confirm) {
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+
+        const usuario = { nom_usuari: nom, correu: email, contrasenya: password };
 
         try {
             const res = await fetch("http://localhost:3000/api/auth/register", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(usuario)
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(usuario),
             });
-            if (res.ok) {
-                setSent(true);
-            }
+
             const data = await res.json();
+            if (res.ok) setSent(true);
             setMessage(data.message);
         } catch (error) {
             console.log(error);
@@ -42,82 +45,93 @@ export default function Register() {
 
     if (sent) {
         return (
-            <div>
-                <h2>📧 Revisa el teu correu</h2>
-                <p>Hem enviat un enllaç de verificació a <strong>{email}</strong></p>
+            <div className="w-full max-w-md rounded-2xl border border-slate-700/50 bg-[#111d2a]/90 p-8 text-white shadow-2xl">
+                <h2 className="text-2xl font-bold mb-2">📧 Revisa tu correo</h2>
+                <p className="text-slate-300">
+                    Hemos enviado un enlace de verificación a <strong>{email}</strong>
+                </p>
             </div>
         );
     }
 
     return (
-        <div className="flex items-center justify-center bg-gray-100">
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white p-8 rounded-xl shadow-md w-80"
-            >
-                <h2 className="text-2xl font-bold mb-6 text-center">
-                    Registro                    </h2>
+        <div className="w-full max-w-md rounded-2xl border border-slate-700/50 bg-[#111d2a]/90 p-8 shadow-2xl">
+            <h2 className="text-3xl font-extrabold text-white text-center mb-2">
+                Registro
+            </h2>
+            <p className="text-sm text-slate-400 text-center mb-6">
+                Crea tu cuenta para guardar y seguir animes.
+            </p>
 
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">
-                        Nombre de usuario
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-2">
+                        Usuario
                     </label>
                     <input
                         type="text"
-                        className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={nom}
                         onChange={(e) => setNom(e.target.value)}
+                        className="w-full rounded-xl border border-slate-700/60 bg-[#152332] px-4 py-2.5 text-white outline-none focus:border-cyan-500/60"
                         required
                     />
                 </div>
 
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">
-                        Correo electrónico
+                <div>
+                    <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-2">
+                        Correo
                     </label>
                     <input
                         type="email"
-                        className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        className="w-full rounded-xl border border-slate-700/60 bg-[#152332] px-4 py-2.5 text-white outline-none focus:border-cyan-500/60"
                         required
                     />
                 </div>
 
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">
+                <div>
+                    <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-2">
                         Contraseña
                     </label>
                     <input
                         type="password"
-                        className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        className="w-full rounded-xl border border-slate-700/60 bg-[#152332] px-4 py-2.5 text-white outline-none focus:border-cyan-500/60"
                         required
                     />
                 </div>
 
-                <div className="mb-6">
-                    <label className="block text-sm font-medium mb-1">
+                <div>
+                    <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-2">
                         Confirmar contraseña
                     </label>
                     <input
                         type="password"
-                        className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={confirm}
                         onChange={(e) => setConfirm(e.target.value)}
+                        className="w-full rounded-xl border border-slate-700/60 bg-[#152332] px-4 py-2.5 text-white outline-none focus:border-cyan-500/60"
                         required
                     />
                 </div>
 
-                {message && <p className="text-center text-sm mt-2 text-red-600">{message}</p>}
+                {message && (
+                    <p className="text-center text-sm text-red-300">{message}</p>
+                )}
+
                 <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                    className="w-full rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-200 py-2.5 font-semibold hover:bg-cyan-500/30 hover:border-cyan-400/60 transition"
                 >
                     Registrarse
                 </button>
-
+                <p className="text-center text-sm text-slate-400 mt-4">
+                    ¿Ya tienes cuenta?{" "}
+                    <a href="/auth/login" className="text-cyan-300 hover:text-cyan-200">
+                        Inicia sesión
+                    </a>
+                </p>
             </form>
         </div>
     );

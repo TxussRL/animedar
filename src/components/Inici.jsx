@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const genres = ["Acción", "Aventura", "Comedia", "Fantasía", "Drama", "Romance", "Terror", "Ciencia ficción"];
-
 const genreMap = {
     Action: "Acción",
     Adventure: "Aventura",
@@ -124,7 +122,7 @@ function AnimeCardSkeleton() {
     );
 }
 
-export default function Inici() {
+export default function Inici({ user }) {
     const navigate = useNavigate();
     const API_BASE = "http://localhost:3000";
     const [searchTerm, setSearchTerm] = useState("");
@@ -273,6 +271,74 @@ export default function Inici() {
                             <p className="text-slate-600 text-sm mt-1">{error}</p>
                         </div>
                     )}
+                </div>
+            </section>
+
+            {/* INFO SECTION */}
+            <section className="relative py-20 px-6">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0f1923] to-[#0f1923]" />
+
+                <div className="relative max-w-[1400px] mx-auto grid gap-10 lg:grid-cols-[1.2fr_1fr] items-center">
+                    <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300/80 mb-3">
+                            Sobre la plataforma
+                        </p>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
+                            Todo tu anime en un solo lugar
+                        </h2>
+                        <p className="text-slate-300/80 leading-relaxed max-w-xl">
+                            Descubre nuevas series, filtra por temporada, año, género o formato y guarda tus favoritos en tu lista personal.
+                            Comparte opiniones y construye tu historial de anime de forma simple y rápida.
+                        </p>
+
+                        <div className="mt-6 flex flex-wrap gap-3">
+                            <button
+                                type="button"
+                                onClick={() => (user ? navigate("/anime/buscar") : navigate("/auth/login"))}
+                                className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-300 transition-all duration-200 hover:bg-cyan-500/20 hover:border-cyan-400/60"
+                            >
+                                {user ? "Explorar" : "Iniciar sesión"}
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => navigate("/anime/top-100")}
+                                className="inline-flex items-center gap-2 rounded-xl border border-slate-700/60 bg-[#152332] px-5 py-2.5 text-sm font-semibold text-slate-200 hover:border-cyan-500/40 hover:text-white"
+                            >
+                                Ver Top 100
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="rounded-2xl border border-slate-700/60 bg-[#111d2a]/70 p-5">
+                            <h3 className="text-white font-semibold mb-2">Búsqueda avanzada</h3>
+                            <p className="text-sm text-slate-400">
+                                Filtra por temporada, año, formato, género y popularidad en segundos.
+                            </p>
+                        </div>
+
+                        <div className="rounded-2xl border border-slate-700/60 bg-[#111d2a]/70 p-5">
+                            <h3 className="text-white font-semibold mb-2">Tu lista personal</h3>
+                            <p className="text-sm text-slate-400">
+                                Guarda tus animes en seguimiento, completados o pendientes.
+                            </p>
+                        </div>
+
+                        <div className="rounded-2xl border border-slate-700/60 bg-[#111d2a]/70 p-5">
+                            <h3 className="text-white font-semibold mb-2">Recomendaciones</h3>
+                            <p className="text-sm text-slate-400">
+                                Descubre nuevos animes basados en tus gustos y tendencias.
+                            </p>
+                        </div>
+
+                        <div className="rounded-2xl border border-slate-700/60 bg-[#111d2a]/70 p-5">
+                            <h3 className="text-white font-semibold mb-2">Comunidad</h3>
+                            <p className="text-sm text-slate-400">
+                                Comparte opiniones y conecta con otros fans del anime.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>

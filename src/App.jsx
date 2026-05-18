@@ -5,27 +5,46 @@ import Inici from "./components/Inici";
 import AuthRoutes from "./routes/AuthRoutes";
 import AnimeRoutes from "./routes/AnimeRoutes";
 import Footer from "./components/Footer";
+import UserSettings from "./components/Settings";
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(localStorage.getItem("user") || null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
 
   // Verificar si hay un token guardado al cargar la app
   useEffect(() => {
     const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
 
-    if (token && savedUser) {
+    if (token && savedUser && savedUser !== "undefined") {
       try {
         setUser(JSON.parse(savedUser));
+        setToken(token);
       } catch (error) {
-        console.error("Error al parsear usuario:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
       }
     }
     setLoading(false);
   }, []);
+
+  const [alerta, setAlerta] = useState("");
+
+  const mostrarAlerta = (missatge) => {
+    setAlerta(missatge);
+    setTimeout(() => setAlerta(""), 3000);
+  };
+
+  function handleUpdateUser(user) {
+    localStorage.setItem("user", JSON.stringify(user));
+    setUser(user);
+  }
+
+  function RequireAuth({ children }) {
+    const token = localStorage.getItem("token");
+    return token ? children : <Navigate to="/auth/login" replace />;
+  }
 
   const handleLogin = (token, userData) => {
     localStorage.setItem("token", token);
@@ -46,12 +65,21 @@ function App() {
   return (
     <div className="min-h-screen bg-[#0f1923]">
       <Navbar user={user} onLogout={handleLogout} />
+      {
+        alerta && (
+          <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-cyan-500 px-4 py-2 text-sm text-black shadow-lg">
+            {alerta}
+          </div>
+        )
+      }
 
       <main>
         <Routes>
           <Route path="/" element={<Inici user={user} />} />
           <Route path="/auth/*" element={<AuthRoutes onLogin={handleLogin} user={user} />} />
           <Route path="/anime/*" element={<AnimeRoutes user={user} />} />
+
+          <Route path="/settings" element={<RequireAuth><UserSettings user={user} UpdateUser={handleUpdateUser} mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
 
           <Route path="/login" element={<Navigate to="/auth/login" replace />} />
           <Route path="/register" element={<Navigate to="/auth/register" replace />} />

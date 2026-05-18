@@ -74,6 +74,7 @@ export default function AnimeBuscar() {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const observerRef = useRef(null);
+    const isFetchingRef = useRef(false);
 
     useEffect(() => {
         const id = setTimeout(() => {
@@ -146,6 +147,7 @@ export default function AnimeBuscar() {
                 }
             } finally {
                 setLoading(false);
+                isFetchingRef.current = false;
             }
         };
 
@@ -156,19 +158,18 @@ export default function AnimeBuscar() {
 
     useEffect(() => {
         if (!observerRef.current) return;
+        if (!results.length) return;
 
         const observer = new IntersectionObserver(
             (entries) => {
                 if (
                     entries[0].isIntersecting &&
                     hasMore &&
-                    !loading &&
-                    !cooldown &&
+                    !isFetchingRef.current &&
                     isInitialLoaded
                 ) {
-                    setCooldown(true);
+                    isFetchingRef.current = true;
                     setPage((p) => p + 1);
-                    setTimeout(() => setCooldown(false), 800);
                 }
             },
             { rootMargin: "200px" }
@@ -176,7 +177,7 @@ export default function AnimeBuscar() {
 
         observer.observe(observerRef.current);
         return () => observer.disconnect();
-    }, [hasMore, loading, cooldown, isInitialLoaded]);
+    }, [hasMore, isInitialLoaded, results.length]);
 
     const handleAddGenre = (value) => {
         if (!value) return;

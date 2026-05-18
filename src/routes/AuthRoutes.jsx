@@ -4,6 +4,7 @@ import Register from "../components/FormRegister";
 import VerifyEmail from "../components/VerifyEmail";
 
 function AuthRoutes({ onLogin, user }) {
+    // auth/*
     return (
         <Routes>
             <Route index element={<Navigate to="login" replace />} />
