@@ -12,7 +12,7 @@ let colors = [
     { bg: "bg-orange-500/15", text: "text-orange-300" }
 ];
 
-export default function AnimeInformation() {
+export default function AnimeInformation({ user }) {
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -29,18 +29,13 @@ export default function AnimeInformation() {
     const [score, setScore] = useState("");
     const [isInList, setIsInList] = useState(false);
 
-
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }, []);
-
     useEffect(() => {
         async function fetchAll() {
             try {
                 setLoading(true);
 
                 const res = await fetch(
-                    `http://localhost:3000/api/anime/${id}/full`
+                    `${import.meta.env.VITE_API_URL}/api/anime/${id}/full`
                 );
 
                 const json = await res.json();
@@ -59,6 +54,32 @@ export default function AnimeInformation() {
 
         fetchAll();
     }, [id]);
+
+    async function fetchGuardarLista() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lista/add`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuari: user?.id,
+                    id_anime: Number(id),
+                    titol: anime?.title?.romaji,
+                    imatge: anime?.coverImage?.large,
+                    estat: status,
+                    valoracio: score ? Number(score) : null,
+                    favorit: false
+                })
+            });
+
+            const data = await res.json();
+            console.log(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     if (loading) {
         return (
@@ -106,7 +127,7 @@ export default function AnimeInformation() {
 
                         <button
                             onClick={() => setShowListModal(true)}
-                            className="w-full rounded-lg bg-cyan-500 py-2 text-black font-semibold hover:bg-cyan-400"
+                            className="w-full rounded-lg bg-cyan-500 py-2 text-black font-semibold hover:bg-cyan-400 cursor-pointer"
                         >
                             {isInList ? "Editar / Eliminar de mi lista" : "Añadir a mi lista"}
                         </button>
@@ -396,11 +417,10 @@ export default function AnimeInformation() {
                                         value={status}
                                         onChange={(e) => setStatus(e.target.value)}
                                     >
-                                        <option>Watching</option>
-                                        <option>Completed</option>
-                                        <option>On Hold</option>
-                                        <option>Dropped</option>
-                                        <option>Plan to Watch</option>
+                                        <option value="watching">Watching</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="plan_to_watch">Plan to Watch</option>
+                                        <option value="dropped">Dropped</option>
                                     </select>
                                 </div>
 
@@ -418,17 +438,17 @@ export default function AnimeInformation() {
                             <div className="flex justify-end gap-3 mt-6">
                                 <button
                                     onClick={() => setShowListModal(false)}
-                                    className="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600"
+                                    className="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 cursor-pointer"
                                 >
                                     Cancelar
                                 </button>
 
                                 {isInList ? (
-                                    <button className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-400 text-black font-semibold">
+                                    <button className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-400 text-black font-semibold cursor-pointer">
                                         Eliminar
                                     </button>
                                 ) : (
-                                    <button className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-semibold">
+                                    <button className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-semibold cursor-pointer" onClick={() => fetchGuardarLista()}>
                                         Guardar
                                     </button>
                                 )}

@@ -59,7 +59,7 @@ function Navbar({ user, onLogout }) {
         patterns.some((path) =>
             path === "/" ? location.pathname === "/" : location.pathname === path || location.pathname.startsWith(`${path}/`)
         );
-    const avatarUrl = user?.avatar ? `http://localhost:3000${user.avatar}` : null;
+    const avatarUrl = user?.avatar ? `${import.meta.env.VITE_API_URL}${user.avatar}` : null;
 
     const avatar = avatarUrl ? (
         <img
@@ -107,7 +107,7 @@ function Navbar({ user, onLogout }) {
                                 </div>
 
                                 <div className="absolute right-0 mt-2 w-48 rounded-xl border border-slate-700/60 bg-[#111f2c]/95 backdrop-blur-xl shadow-xl shadow-black/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                                    <Link to={`/user/${user.nom_usuari}`} className="block px-4 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-tl-xl rounded-tr-xl">Mi perfil</Link>
+                                    <Link to={`/lista/${user.nom_usuari}`} className="block px-4 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-tl-xl rounded-tr-xl">Mi perfil</Link>
                                     <Link to="/settings" className="block px-4 py-2 text-sm text-slate-200 hover:bg-white/5">Settings</Link>
                                     <div className="h-px bg-slate-700/70 my-1"></div>
                                     <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-300 hover:bg-red-500/10 rounded-bl-xl rounded-br-xl">Salir</button>

@@ -19,7 +19,7 @@ export default function UserSettings({ user, UpdateUser, mostrarAlerta }) {
         setLoadingProfile(true);
 
         try {
-            const res = await fetch("http://localhost:3000/api/users/me", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export default function UserSettings({ user, UpdateUser, mostrarAlerta }) {
             const formData = new FormData();
             formData.append("avatar", avatarFile);
 
-            const res = await fetch("http://localhost:3000/api/users/me/avatar", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me/avatar`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ export default function UserSettings({ user, UpdateUser, mostrarAlerta }) {
         setLoadingPassword(true);
 
         try {
-            const res = await fetch("http://localhost:3000/api/users/me/password", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me/password`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

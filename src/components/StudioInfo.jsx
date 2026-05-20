@@ -12,7 +12,7 @@ export default function StudioInfo() {
         async function fetchStudio() {
             try {
                 setLoading(true);
-                const res = await fetch(`http://localhost:3000/api/anime/studio/${id}`);
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/anime/studio/${id}`);
                 const json = await res.json();
                 setStudio(json.data?.studio || null);
             } catch (err) {

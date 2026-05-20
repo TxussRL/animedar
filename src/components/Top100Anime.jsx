@@ -35,7 +35,7 @@ export default function Top100Anime() {
 
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch("http://localhost:3000/api/top/anime/full");
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/top/anime/full`);
             const json = await res.json();
             setTopAnime(json.data);
         }

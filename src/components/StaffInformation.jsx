@@ -11,7 +11,7 @@ export default function StaffInformation() {
         async function fetchStaff() {
             try {
                 setLoading(true);
-                const res = await fetch(`http://localhost:3000/api/people/${personId}`);
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/people/${personId}`);
                 const json = await res.json();
                 setStaff(json?.data);
             } catch (err) {

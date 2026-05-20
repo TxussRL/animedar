@@ -19,7 +19,7 @@ export default function VerifyEmail() {
             }
 
             try {
-                const res = await fetch(`http://localhost:3000/api/auth/verify-email?token=${token}`);
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify-email?token=${token}`);
                 const data = await res.json();
                 setStatus(res.ok ? "success" : "error");
                 setMessage(data.message);

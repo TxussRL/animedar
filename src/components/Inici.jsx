@@ -124,7 +124,7 @@ function AnimeCardSkeleton() {
 
 export default function Inici({ user }) {
     const navigate = useNavigate();
-    const API_BASE = "http://localhost:3000";
+    const API_BASE = "${import.meta.env.VITE_API_URL}";
     const [searchTerm, setSearchTerm] = useState("");
     const [trendingAnime, setTrendingAnime] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -138,7 +138,7 @@ export default function Inici({ user }) {
                 setLoading(true);
                 setError(null);
 
-                const res = await fetch(`${API_BASE}/api/trending/anime?page=1&limit=8`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/trending/anime?page=1&limit=8`, {
                     cache: "no-store"
                 });
 

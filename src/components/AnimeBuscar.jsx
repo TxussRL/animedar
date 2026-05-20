@@ -111,7 +111,7 @@ export default function AnimeBuscar() {
         if (format) params.set("format", format);
         params.set("page", page);
         params.set("perPage", 25);
-        return `http://localhost:3000/api/anime/buscar?${params.toString()}`;
+        return `${import.meta.env.VITE_API_URL}/api/anime/buscar?${params.toString()}`;
     };
 
     useEffect(() => {

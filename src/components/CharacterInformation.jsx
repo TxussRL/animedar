@@ -11,7 +11,7 @@ export default function CharacterInformation() {
         async function fetchCharacter() {
             try {
                 setLoading(true);
-                const res = await fetch(`http://localhost:3000/api/character/${characterId}/full`);
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/character/${characterId}/full`);
                 const json = await res.json();
                 setCharacter(json?.data?.character); // ✅ aquí estaba el problema
             } catch (err) {
