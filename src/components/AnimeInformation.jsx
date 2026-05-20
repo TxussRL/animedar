@@ -94,7 +94,7 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
             });
 
             const data = await res.json();
-            console.log(data);
+
             mostrarAlerta("Anime añadido a tu lista");
             setIsInList(true);
 
