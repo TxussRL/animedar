@@ -5,6 +5,7 @@ import Top100Anime from "../components/Top100Anime";
 import AnimeInformation from "../components/AnimeInformation"
 import StaffInformation from "../components/StaffInformation"
 import StudioInformation from "../components/StudioInfo";
+import CharacterInformation from "../components/CharacterInformation";
 
 function AnimeRoutes({ user }) {
     // /anime/*
@@ -20,6 +21,7 @@ function AnimeRoutes({ user }) {
             <Route path=":id" element={<AnimeInformation user={user} />} />
             <Route path="staff/:personId" element={<StaffInformation user={user} />} />
             <Route path="studio/:id" element={<StudioInformation user={user} />} />
+            <Route path="character/:characterId" element={<CharacterInformation user={user} />} />
             <Route path="*" element={<Navigate to="buscar" replace />} />
         </Routes>
     );

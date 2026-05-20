@@ -29,6 +29,11 @@ export default function AnimeInformation() {
     const [score, setScore] = useState("");
     const [isInList, setIsInList] = useState(false);
 
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
     useEffect(() => {
         async function fetchAll() {
             try {
@@ -77,46 +82,61 @@ export default function AnimeInformation() {
     return (
         <div className="bg-[#0B0F1A] min-h-screen px-8 md:px-20 py-10 text-white">
             {/* Header */}
-            <section className="flex flex-col md:flex-row gap-10 mt-10">
-                <div className="flex flex-col items-center gap-4">
-                    <img
-                        className="rounded-2xl w-[220px] h-[320px] object-cover"
-                        src={anime?.coverImage?.large}
-                        alt={title}
-                    />
+            <section
+                className="relative mt-10 rounded-2xl overflow-hidden"
+                style={{
+                    backgroundColor: "#0b0f1a",
+                    backgroundImage: anime?.bannerImage
+                        ? `linear-gradient(rgba(11,15,26,0.85), rgba(11,15,26,0.85)), url(${anime.bannerImage})`
+                        : "linear-gradient(rgba(11,15,26,1), rgba(11,15,26,1))",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                }}
+            >
 
-                    <button
-                        onClick={() => setShowListModal(true)}
-                        className="w-full rounded-lg bg-cyan-500 py-2 text-black font-semibold hover:bg-cyan-400"
-                    >
-                        {isInList ? "Editar / Eliminar de mi lista" : "Añadir a mi lista"}
-                    </button>
-                </div>
 
-                <div className="flex flex-col gap-2">
-                    <div className="flex flex-row gap-2 text-white/70 text-sm mb-3">
-                        <span onClick={() => navigate("/")} className="cursor-pointer hover:text-[#01c6e5]">Inicio</span>
-                        <span>/</span>
-                        <span onClick={() => navigate("/anime/buscar")} className="cursor-pointer hover:text-[#01c6e5]">Buscar</span>
-                        <span>/</span>
-                        <span className="text-[#01c6e5]">{title}</span>
+                {/* contenido */}
+                <div className="relative z-10 flex flex-col md:flex-row gap-10 p-6">
+                    <div className="flex flex-col items-center gap-4">
+                        <img
+                            className="rounded-2xl w-[220px] h-[320px] object-cover"
+                            src={anime?.coverImage?.large}
+                            alt={title}
+                        />
+
+                        <button
+                            onClick={() => setShowListModal(true)}
+                            className="w-full rounded-lg bg-cyan-500 py-2 text-black font-semibold hover:bg-cyan-400"
+                        >
+                            {isInList ? "Editar / Eliminar de mi lista" : "Añadir a mi lista"}
+                        </button>
                     </div>
 
-                    <h1 className="text-3xl font-black">{title}</h1>
-                    <h2 className="text-gray-500 font-black">{anime?.title?.native}</h2>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-row gap-2 text-white/70 text-sm mb-3">
+                            <span onClick={() => navigate("/")} className="cursor-pointer hover:text-[#01c6e5]">Inicio</span>
+                            <span>/</span>
+                            <span onClick={() => navigate("/anime/buscar")} className="cursor-pointer hover:text-[#01c6e5]">Buscar</span>
+                            <span>/</span>
+                            <span className="text-[#01c6e5]">{title}</span>
+                        </div>
 
-                    <div className="flex flex-wrap gap-3 mt-4">
-                        {anime?.genres?.map((gen, index) => {
-                            const color = colors[index % colors.length];
-                            return (
-                                <p
-                                    key={`${gen}-${index}`}
-                                    className={`${color?.text} ${color?.bg} py-1 px-4 rounded-3xl text-xs`}
-                                >
-                                    {gen}
-                                </p>
-                            );
-                        })}
+                        <h1 className="text-3xl font-black">{title}</h1>
+                        <h2 className="text-gray-500 font-black">{anime?.title?.native}</h2>
+
+                        <div className="flex flex-wrap gap-3 mt-4">
+                            {anime?.genres?.map((gen, index) => {
+                                const color = colors[index % colors.length];
+                                return (
+                                    <p
+                                        key={`${gen}-${index}`}
+                                        className={`${color?.text} ${color?.bg} py-1 px-4 rounded-3xl text-xs`}
+                                    >
+                                        {gen}
+                                    </p>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -135,71 +155,133 @@ export default function AnimeInformation() {
                     <aside className="bg-[#121827] rounded-xl p-4 space-y-3 text-sm h-fit self-start">
                         <h3 className="text-white font-semibold">Información</h3>
                         <div className="text-slate-300 space-y-2">
-                            <p><span className="text-white">Format:</span> {anime?.format}</p>
-                            <p><span className="text-white">Episodes:</span> {anime?.episodes}</p>
-                            <p><span className="text-white">Episode Duration:</span> {anime?.duration} mins</p>
-                            <p><span className="text-white">Status:</span> {anime?.status}</p>
+                            {anime?.format != null && (
+                                <p><span className="text-white">Format:</span> {anime.format}</p>
+                            )}
 
-                            <p>
-                                <span className="text-white">Start Date:</span>{" "}
-                                {anime?.startDate?.month}/{anime?.startDate?.day}/{anime?.startDate?.year}
-                            </p>
-                            <p>
-                                <span className="text-white">End Date:</span>{" "}
-                                {anime?.endDate?.month}/{anime?.endDate?.day}/{anime?.endDate?.year}
-                            </p>
+                            {anime?.episodes != null && (
+                                <p><span className="text-white">Episodes:</span> {anime.episodes}</p>
+                            )}
 
-                            <p><span className="text-white">Season: </span>
-                                <span
-                                    onClick={() => navigate(`/anime/buscar?season=${anime?.season}&year=${anime?.seasonYear}`)}
-                                    className="cursor-pointer text-cyan-400 hover:text-cyan-300"
-                                >
-                                    {anime?.season} {anime?.seasonYear}
-                                </span></p>
-                            <p><span className="text-white">Average Score:</span> {anime?.averageScore}%</p>
-                            <p><span className="text-white">Mean Score:</span> {anime?.meanScore}%</p>
-                            <p><span className="text-white">Popularity:</span> {anime?.popularity}</p>
-                            <p><span className="text-white">Favorites:</span> {anime?.favourites}</p>
+                            {anime?.duration != null && (
+                                <p><span className="text-white">Episode Duration:</span> {anime.duration} mins</p>
+                            )}
 
-                            <p>
-                                <span className="text-white">Studios:</span>{" "}
-                                {anime?.studios?.edges?.filter(s => s.isMain).map((s) => (
+                            {anime?.status != null && (
+                                <p><span className="text-white">Status:</span> {anime.status}</p>
+                            )}
+
+                            {anime?.startDate?.year != null && (
+                                <p>
+                                    <span className="text-white">Start Date:</span>{" "}
+                                    {anime.startDate.month}/{anime.startDate.day}/{anime.startDate.year}
+                                </p>
+                            )}
+
+                            {anime?.endDate?.year != null && (
+                                <p>
+                                    <span className="text-white">End Date:</span>{" "}
+                                    {anime.endDate.month}/{anime.endDate.day}/{anime.endDate.year}
+                                </p>
+                            )}
+
+                            {(anime?.season || anime?.seasonYear) && (
+                                <p>
+                                    <span className="text-white">Season:</span>{" "}
                                     <span
-                                        key={s.node.id}
-                                        onClick={() => navigate(`/anime/studio/${s.node.id}`)}
+                                        onClick={() => navigate(`/anime/buscar?season=${anime?.season}&year=${anime?.seasonYear}`)}
                                         className="cursor-pointer text-cyan-400 hover:text-cyan-300"
                                     >
-                                        {s.node.name}
+                                        {anime?.season} {anime?.seasonYear}
+                                    </span>
+                                </p>
+                            )}
+
+                            {anime?.averageScore != null && (
+                                <p><span className="text-white">Average Score:</span> {anime.averageScore}%</p>
+                            )}
+
+                            {anime?.meanScore != null && (
+                                <p><span className="text-white">Mean Score:</span> {anime.meanScore}%</p>
+                            )}
+
+                            {anime?.popularity != null && (
+                                <p><span className="text-white">Popularity:</span> {anime.popularity}</p>
+                            )}
+
+                            {anime?.favourites != null && (
+                                <p><span className="text-white">Favorites:</span> {anime.favourites}</p>
+                            )}
+
+                            {anime?.studios?.edges?.some(s => s.isMain) && (
+                                <p>
+                                    <span className="text-white">Studios:</span>{" "}
+                                    {anime.studios.edges
+                                        .filter(s => s.isMain)
+                                        .map(s => (
+                                            <span
+                                                key={s.node.id}
+                                                onClick={() => navigate(`/anime/studio/${s.node.id}`)}
+                                                className="cursor-pointer text-cyan-400 hover:text-cyan-300 mr-2"
+                                            >
+                                                {s.node.name}
+                                            </span>
+                                        ))}
+                                </p>
+                            )}
+
+                            {anime?.studios?.edges?.some(s => !s.isMain) && (
+                                <p>
+                                    <span className="text-white">Producers:</span>{" "}
+                                    {anime.studios.edges
+                                        .filter(s => !s.isMain)
+                                        .map(s => s.node.name)
+                                        .join(", ")}
+                                </p>
+                            )}
+
+                            {anime?.source != null && (
+                                <p><span className="text-white">Source:</span> {anime.source}</p>
+                            )}
+
+                            {anime?.genres?.length > 0 && (
+                                <p><span className="text-white">Genres:</span> {anime.genres.map(g => (
+                                    <span
+                                        key={g}
+                                        onClick={() => navigate(`/anime/buscar?genres=${g}`)}
+                                        className="cursor-pointer text-cyan-400 hover:text-cyan-300 mr-2"
+                                    >
+                                        {g}
                                     </span>
                                 ))}
-                            </p>
-                            <p>
-                                <span className="text-white">Producers:</span>{" "}
-                                {anime?.studios?.edges?.filter(s => !s.isMain).map(s => s.node.name).join(", ")}
-                            </p>
+                                </p>
+                            )}
 
-                            <p><span className="text-white">Source:</span> {anime?.source}</p>
+                            {anime?.title?.romaji && (
+                                <p><span className="text-white">Romaji:</span> {anime.title.romaji}</p>
+                            )}
 
-                            <p>
-                                <span className="text-white">Genres:</span>{" "}
-                                {anime?.genres?.join(", ")}
-                            </p>
+                            {anime?.title?.english && (
+                                <p><span className="text-white">English:</span> {anime.title.english}</p>
+                            )}
 
-                            <p><span className="text-white">Romaji:</span> {anime?.title?.romaji}</p>
-                            <p><span className="text-white">English:</span> {anime?.title?.english}</p>
-                            <p><span className="text-white">Native:</span> {anime?.title?.native}</p>
+                            {anime?.title?.native && (
+                                <p><span className="text-white">Native:</span> {anime.title.native}</p>
+                            )}
 
-                            <p>
-                                <span className="text-white">Synonyms:</span>{" "}
-                                {anime?.synonyms?.join(", ")}
-                            </p>
+                            {anime?.synonyms?.length > 0 && (
+                                <p><span className="text-white">Synonyms:</span> {anime.synonyms.join(", ")}</p>
+                            )}
                         </div>
                     </aside>
 
                     <div className="space-y-6">
                         <div className="bg-[#121827] rounded-xl p-5">
                             <h3 className="font-semibold mb-3">Sinopsis</h3>
-                            <p className="text-slate-300 text-sm leading-6"> {anime?.description}</p>
+                            <p
+                                className="text-slate-300 text-sm leading-6"
+                                dangerouslySetInnerHTML={{ __html: anime?.description || "" }}
+                            />
                         </div>
 
                         {/* RELATIONS */}
@@ -247,7 +329,7 @@ export default function AnimeInformation() {
                     <section className="mt-10">
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                             {characters.slice(0, 25).map((c) => (
-                                <div key={c?.id} className="flex flex-col items-center">
+                                <div key={c?.id} className="flex flex-col items-center cursor-pointer hover:bg-[#1a2a3b] transition" onClick={() => navigate(`/anime/character/${c?.id}`)}>
                                     <img className="rounded-full w-16 h-16 object-cover border border-slate-700" src={c?.image?.large} alt={c?.name?.full} />
                                     <p className="text-xs mt-2 text-center">{c?.name?.full}</p>
                                 </div>
@@ -263,7 +345,7 @@ export default function AnimeInformation() {
                     <section className="mt-10">
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                             {staff.slice(0, 25).map((s, i) => (
-                                <div key={s?.id ?? `staff-${i}`} className="flex flex-col items-center cursor-pointer" onClick={() => navigate(`/anime/staff/${s?.id}`)}>
+                                <div key={s?.id ?? `staff-${i}`} className="flex flex-col items-center cursor-pointer hover:bg-[#1a2a3b] transition" onClick={() => navigate(`/anime/staff/${s?.id}`)}>
                                     <img className="rounded-full w-16 h-16 object-cover border border-slate-700" src={s?.image?.large} alt={s?.name?.full} />
                                     <p className="text-xs mt-2 text-center">{s?.name?.full}</p>
                                 </div>

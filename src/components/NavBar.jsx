@@ -101,7 +101,7 @@ function Navbar({ user, onLogout }) {
                     {user ? (
                         <div className="hidden md:flex items-center gap-2.5">
                             <div className="relative group">
-                                <div className="flex items-center gap-2 cursor-pointer">
+                                <div className="flex items-center gap-2 cursor-pointer transition-all duration-100 hover:scale-105">
                                     {avatar}
                                     <span className="text-sm text-slate-300">{user.nom_usuari}</span>
                                 </div>

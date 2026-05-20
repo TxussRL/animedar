@@ -283,7 +283,7 @@ export default function AnimeBuscar() {
                                 className="w-full rounded-xl border border-slate-700/60 bg-[#152332] px-3 py-2 text-sm text-white shadow-sm outline-none"
                             >
                                 <option value="">Any</option>
-                                {Array.from({ length: 30 }, (_, i) => 2025 - i).map((y) => (
+                                {Array.from({ length: 88 }, (_, i) => 2027 - i).map((y) => (
                                     <option key={y} value={y}>{y}</option>
                                 ))}
                             </select>
