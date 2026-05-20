@@ -97,10 +97,66 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
 
             mostrarAlerta("Anime añadido a tu lista");
             setIsInList(true);
+            setShowListModal(false)
 
         } catch (err) {
             console.error(err);
             mostrarAlerta("Error al añadir anime a tu lista");
+        }
+    }
+
+    async function fetchEditarLista() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lista/edit`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuari: user?.id,
+                    id_anime: Number(id),
+                    estat: status,
+                    valoracio: score ? Number(score) : null,
+
+                })
+            });
+
+            const data = await res.json();
+
+            mostrarAlerta("¡Anime editado en tu lista!");
+            setIsInList(true);
+            setShowListModal(false);
+
+        } catch (err) {
+            console.error(err);
+            mostrarAlerta("Error al editar anime en tu lista");
+        }
+    }
+
+    async function fetchEliminarLista() {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lista/remove`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuari: user?.id,
+                    id_anime: Number(id)
+                })
+            });
+
+            const data = await res.json();
+
+            mostrarAlerta("Anime eliminado de tu lista");
+            setIsInList(false);
+            setShowListModal(false)
+
+        } catch (err) {
+            console.error(err);
+            mostrarAlerta("Error al eliminar anime de tu lista");
         }
     }
 
@@ -467,11 +523,25 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                                 </button>
 
                                 {isInList ? (
-                                    <button className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-400 text-black font-semibold cursor-pointer">
-                                        Eliminar
-                                    </button>
+                                    <>
+                                        <button
+                                            className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-semibold cursor-pointer"
+                                            onClick={() => fetchEditarLista()}
+                                        >
+                                            Editar
+                                        </button>
+                                        <button
+                                            className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-400 text-black font-semibold cursor-pointer"
+                                            onClick={() => fetchEliminarLista()}
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </>
                                 ) : (
-                                    <button className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-semibold cursor-pointer" onClick={() => fetchGuardarLista()}>
+                                    <button
+                                        className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-semibold cursor-pointer"
+                                        onClick={() => fetchGuardarLista()}
+                                    >
                                         Guardar
                                     </button>
                                 )}

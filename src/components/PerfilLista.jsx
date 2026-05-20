@@ -14,28 +14,36 @@ export default function PerfilLista({ usuario }) {
     const [animes, setAnimes] = useState([]);
     const [filter, setFilter] = useState("all");
     const [counts, setCounts] = useState({});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchList() {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lista/${usuario.id}`, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            const data = await res.json();
-            setUser(data.user);
-            setAnimes(data.list);
+            setLoading(true);
+            try {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lista/${usuario.id}`, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                const data = await res.json();
+                setUser(data.user);
+                setAnimes(data.list);
 
-            // Contadores por estado
-            const summary = data.list.reduce(
-                (acc, anime) => {
-                    acc[anime.estat] = (acc[anime.estat] || 0) + 1;
-                    acc.all = (acc.all || 0) + 1;
-                    return acc;
-                },
-                { all: 0 }
-            );
-            setCounts(summary);
+                // Contadores por estado
+                const summary = data.list.reduce(
+                    (acc, anime) => {
+                        acc[anime.estat] = (acc[anime.estat] || 0) + 1;
+                        acc.all = (acc.all || 0) + 1;
+                        return acc;
+                    },
+                    { all: 0 }
+                );
+                setCounts(summary);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
         }
         fetchList();
     }, [usuario.id]);
@@ -44,7 +52,13 @@ export default function PerfilLista({ usuario }) {
         ? animes
         : animes.filter((a) => a.estat === filter);
 
-    if (!user) return <div className="text-white p-10">Cargando...</div>;
+    if (loading || !user) {
+        return (
+            <div className="flex h-screen items-center justify-center text-white">
+                Cargando...
+            </div>
+        );
+    }
 
     return (
         <div className="bg-[#121827] min-h-screen">
