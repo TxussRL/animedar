@@ -7,7 +7,7 @@ import StaffInformation from "../components/StaffInformation"
 import StudioInformation from "../components/StudioInfo";
 import CharacterInformation from "../components/CharacterInformation";
 
-function AnimeRoutes({ user }) {
+function AnimeRoutes({ user, mostrarAlerta }) {
     // /anime/*
     return (
         <Routes>
@@ -18,7 +18,7 @@ function AnimeRoutes({ user }) {
             <Route path="trending" element={<Navigate to="/anime/top-100" replace />} />
             <Route path="social" element={<Inici user={user} />} />
             <Route path="forum" element={<Inici user={user} />} />
-            <Route path=":id" element={<AnimeInformation user={user} />} />
+            <Route path=":id" element={<AnimeInformation user={user} mostrarAlerta={mostrarAlerta} />} />
             <Route path="staff/:personId" element={<StaffInformation user={user} />} />
             <Route path="studio/:id" element={<StudioInformation user={user} />} />
             <Route path="character/:characterId" element={<CharacterInformation user={user} />} />

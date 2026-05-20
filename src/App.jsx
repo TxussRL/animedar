@@ -78,7 +78,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Inici user={user} />} />
           <Route path="/auth/*" element={<AuthRoutes onLogin={handleLogin} user={user} />} />
-          <Route path="/anime/*" element={<AnimeRoutes user={user} />} />
+          <Route path="/anime/*" element={<AnimeRoutes user={user} mostrarAlerta={mostrarAlerta} />} />
 
           <Route path="/settings" element={<RequireAuth><UserSettings user={user} UpdateUser={handleUpdateUser} mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
           <Route path="/lista/:username" element={<RequireAuth><PerfilLista usuario={user} /></RequireAuth>} />

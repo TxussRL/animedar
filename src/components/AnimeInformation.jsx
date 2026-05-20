@@ -12,7 +12,7 @@ let colors = [
     { bg: "bg-orange-500/15", text: "text-orange-300" }
 ];
 
-export default function AnimeInformation({ user }) {
+export default function AnimeInformation({ user, mostrarAlerta }) {
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ export default function AnimeInformation({ user }) {
     const [tab, setTab] = useState("info");
 
     const [showListModal, setShowListModal] = useState(false);
-    const [status, setStatus] = useState("Watching");
+    const [status, setStatus] = useState("watching");
     const [score, setScore] = useState("");
     const [isInList, setIsInList] = useState(false);
 
@@ -45,6 +45,25 @@ export default function AnimeInformation({ user }) {
                 setStaff(json.data?.staff || []);
                 setRecommendations(json.data?.recommendations || []);
                 setRelations(json.data?.relations || []);
+
+
+                if (user?.id) {
+                    const resLista = await fetch(
+                        `${import.meta.env.VITE_API_URL}/api/lista/${user.id}`,
+                        {
+                            headers: {
+                                "Authorization": `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    const listaJson = await resLista.json();
+                    // Busca si este anime está en la lista:
+                    if (listaJson.list && listaJson.list.some(a => Number(a.id_anime) === Number(id))) {
+                        setIsInList(true);
+                    } else {
+                        setIsInList(false);
+                    }
+                }
             } catch (err) {
                 console.error(err);
             } finally {
@@ -76,8 +95,12 @@ export default function AnimeInformation({ user }) {
 
             const data = await res.json();
             console.log(data);
+            mostrarAlerta("Anime añadido a tu lista");
+            setIsInList(true);
+
         } catch (err) {
             console.error(err);
+            mostrarAlerta("Error al añadir anime a tu lista");
         }
     }
 
