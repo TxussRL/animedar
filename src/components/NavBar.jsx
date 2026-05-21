@@ -171,7 +171,7 @@ function Navbar({ user, onLogout }) {
 
                                 {mobileProfileOpen && (
                                     <div className="pl-3 flex flex-col gap-1">
-                                        <Link to={`/user/${user.nom_usuari}`} onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5">Mi perfil</Link>
+                                        <Link to={`/lista/${user.nom_usuari}`} onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5">Mi perfil</Link>
                                         <Link to="/settings" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5">Settings</Link>
                                         <div className="h-px bg-slate-700/70 my-1"></div>
                                         <button
