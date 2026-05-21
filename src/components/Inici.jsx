@@ -52,24 +52,10 @@ function AnimeCard({ anime, onClick }) {
                 <img
                     src={image}
                     alt={title}
-                    className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? "scale-110" : "scale-100"
-                        } ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                    className={`w-full h-full object-cover transition-transform duration-500 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
                     onLoad={() => setImageLoaded(true)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1a2634] via-transparent to-transparent opacity-80"></div>
-
-                <div className="absolute top-3 left-3">
-                    <span
-                        className={`px-2.5 py-1 text-xs font-semibold rounded-full backdrop-blur-md ${status === "En emisión"
-                            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                            : status === "Próximamente"
-                                ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                                : "bg-blue-500/20 text-blue-300 border border-blue-500/30"
-                            }`}
-                    >
-                        {status}
-                    </span>
-                </div>
 
                 {rating && (
                     <div className="absolute top-3 right-3">
