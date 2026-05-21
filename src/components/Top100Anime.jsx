@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 let colors = [
@@ -54,9 +54,19 @@ function RowCard({ anime, rank, onClick }) {
         <div className="hidden sm:grid grid-cols-3 gap-x-1 gap-y-1 text-xs text-slate-300 min-w-[180px] text-right">
 
             <div>
-            <p className="text-yellow-400 text-sm">
-                ⭐ {anime.averageScore ?? anime.meanScore ?? "?"}%
-            </p>
+            <div className="flex items-center gap-1 text-yellow-400 text-sm">
+                <svg
+                    className="w-4 h-4 fill-yellow-400"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68a1,1,0,0,0,.4,1,1,1,0,0,0,1.05.07L12,18.76l5.1,2.68a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Z" />
+                </svg>
+
+                <span className="font-semibold">
+                    {anime.averageScore ?? anime.meanScore ?? "?"}%
+                </span>
+            </div>
                 <p className="text-white font-semibold">{anime.popularity?.toLocaleString() ?? "?"} popularidad</p>
             </div>
 
@@ -77,34 +87,79 @@ function RowCard({ anime, rank, onClick }) {
 
 export default function Top100Anime() {
     const [topAnime, setTopAnime] = useState([]);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+
+    let observer = useRef();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/top/anime/full`);
-            const json = await res.json();
-            setTopAnime(json.data);
-        }
+    // FETCH DATA
+    const loadAnime = async () => {
+        if (loading || !hasMore) return;
 
-        fetchData();
-    }, []);
+        setLoading(true);
+
+        const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/top/anime?page=${page}&perPage=25`
+        );
+
+        const json = await res.json();
+
+        setTopAnime((prev) => [...prev, ...json.data]);
+        setHasMore(json.hasNextPage);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadAnime();
+    }, [page]);
+
+
+    const lastAnimeRef = (node) => {
+        if (loading) return;
+
+        if (observer.current) observer.current.disconnect();
+
+        observer.current = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && hasMore) {
+                setPage((prev) => prev + 1);
+            }
+        });
+
+        if (node) observer.current.observe(node);
+    };
 
     return (
         <section className="min-h-screen bg-[#0f1923] p-8 mt-12">
             <h1 className="text-white text-4xl font-black mb-8">
-                Top 100 Anime
+                Top Anime
             </h1>
 
             <div className="flex flex-col gap-3">
-                {topAnime.map((anime, index) => (
-                    <RowCard
-                        key={anime.id}
-                        anime={anime}
-                        rank={index + 1}
-                        onClick={() => navigate(`/anime/${anime.id}`)}
-                    />
-                ))}
+                {topAnime.map((anime, index) => {
+                    const isLast = index === topAnime.length - 1;
+
+                    return (
+                        <div
+                            key={anime.id}
+                            ref={isLast ? lastAnimeRef : null}
+                        >
+                            <RowCard
+                                anime={anime}
+                                rank={index + 1}
+                                onClick={() => navigate(`/anime/${anime.id}`)}
+                            />
+                        </div>
+                    );
+                })}
             </div>
+
+            {loading && (
+                <p className="text-center text-white mt-6">
+                    Cargando más...
+                </p>
+            )}
         </section>
     );
 }
