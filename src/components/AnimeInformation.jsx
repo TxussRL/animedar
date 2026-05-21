@@ -346,16 +346,21 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                             )}
 
                             {anime?.genres?.length > 0 && (
-                                <p><span className="text-white">Genres:</span> {anime.genres.map(g => (
-                                    <span
-                                        key={g}
-                                        onClick={() => navigate(`/anime/buscar?genres=${g}`)}
-                                        className="cursor-pointer text-cyan-400 hover:text-cyan-300 mr-2"
-                                    >
-                                        {g}
-                                    </span>
-                                ))}
-                                </p>
+                                <div className="flex flex-col gap-2">
+                                    <span className="text-white">Genres:</span>
+
+                                    <div className="flex flex-col gap-1">
+                                        {anime.genres.map((g) => (
+                                            <span
+                                                key={g}
+                                                onClick={() => navigate(`/anime/buscar?genres=${g}`)}
+                                                className="cursor-pointer text-cyan-400 hover:text-cyan-300 break-words"
+                                            >
+                                                {g}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
                             )}
 
                             {anime?.title?.romaji && (
