@@ -203,13 +203,14 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                             src={anime?.coverImage?.large}
                             alt={title}
                         />
-
-                        <button
-                            onClick={() => setShowListModal(true)}
-                            className="w-full rounded-lg bg-cyan-500 py-2 text-black font-semibold hover:bg-cyan-400 cursor-pointer"
-                        >
-                            {isInList ? "Editar / Eliminar de mi lista" : "Añadir a mi lista"}
-                        </button>
+                        {user && (
+                            <button
+                                onClick={() => setShowListModal(true)}
+                                className="w-full rounded-lg bg-cyan-500 py-2 text-black font-semibold hover:bg-cyan-400 cursor-pointer"
+                            >
+                                {isInList ? "Editar / Eliminar de mi lista" : "Añadir a mi lista"}
+                            </button>
+                        )}
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -499,6 +500,7 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                                         <option value="watching">Watching</option>
                                         <option value="completed">Completed</option>
                                         <option value="plan_to_watch">Plan to Watch</option>
+                                        <option value="paused">Paused</option>
                                         <option value="dropped">Dropped</option>
                                     </select>
                                 </div>

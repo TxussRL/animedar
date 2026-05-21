@@ -6,6 +6,7 @@ const STATUS_LABELS = {
     watching: "Watching",
     completed: "Completed",
     plan_to_watch: "Plan to Watch",
+    paused: "Paused",
     dropped: "Dropped",
 };
 
@@ -85,6 +86,7 @@ export default function PerfilLista({ usuario }) {
                         completed: "Completed",
                         plan_to_watch: "Plan to Watch",
                         dropped: "Dropped",
+                        paused: "Paused",
                     }).map(([key, label]) => (
                         <button
                             key={key}
