@@ -20,7 +20,7 @@ function SearchCard({ anime, onClick }) {
                 <img
                     src={image}
                     alt={title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#101a24] via-transparent to-transparent" />
 
