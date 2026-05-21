@@ -243,7 +243,7 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
             </section>
 
             {/* Tabs */}
-            <section className="mt-10 border-b border-slate-800 text-sm text-slate-400 flex gap-6 w-full md:w-2/3">
+            <section className="mt-10 border-b border-slate-800 text-sm text-slate-400 flex gap-6 w-full md:w-2/3 overflow-x-auto whitespace-nowrap shrink-0">
                 <button onClick={() => setTab("info")} className={`pb-2 cursor-pointer ${tab === "info" ? "border-b-2 border-[#00d3f2] text-white" : "text-[#01c6e5]"}`}>Información</button>
                 <button onClick={() => setTab("characters")} className={`pb-2 cursor-pointer ${tab === "characters" ? "border-b-2 border-[#00d3f2] text-white" : "text-[#01c6e5]"}`}>Personajes</button>
                 <button onClick={() => setTab("staff")} className={`pb-2 cursor-pointer ${tab === "staff" ? "border-b-2 border-[#00d3f2] text-white" : "text-[#01c6e5]"}`}>Staff</button>
@@ -253,7 +253,7 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
             {/* Info + Synopsis */}
             {tab === "info" && (
                 <section className="grid md:grid-cols-[260px_1fr] gap-6 mt-8">
-                    <aside className="bg-[#121827] rounded-xl p-4 space-y-3 text-sm h-fit self-start">
+                    <aside className="bg-[#121827] rounded-xl p-4 space-y-3 text-sm h-fit self-start ">
                         <h3 className="text-white font-semibold">Información</h3>
                         <div className="text-slate-300 space-y-2">
                             {anime?.format != null && (
