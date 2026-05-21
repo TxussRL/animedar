@@ -5,11 +5,8 @@ export default function VerifyEmail() {
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState("loading");
     const [message, setMessage] = useState("");
-    const hasRun = useRef(false);
 
     useEffect(() => {
-        if (hasRun.current) return;
-        hasRun.current = true;
         const verify = async () => {
             const token = searchParams.get("token");
             if (!token) {
@@ -41,7 +38,7 @@ export default function VerifyEmail() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <p className="text-gray-600 font-medium">Verificant el compte...</p>
+                    <p className="text-gray-600 font-medium">Verificando la cuenta...</p>
                 </div>
             )}
             {status === "success" && (
@@ -51,10 +48,10 @@ export default function VerifyEmail() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Correu verificat!</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Correo Verificado</h2>
                     <p className="text-gray-600 mb-6">{message}</p>
                     <Link to="/auth/login" className="inline-block w-full px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition-colors">
-                        Iniciar sessió
+                        Iniciar session
                     </Link>
                 </div>
             )}
@@ -65,10 +62,10 @@ export default function VerifyEmail() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Error de verificació</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Error de verificacion</h2>
                     <p className="text-gray-600 mb-6">{message}</p>
-                    <Link to="/auth/register" className="inline-block w-full px-6 py-3 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg font-medium transition-colors">
-                        Tornar al registre
+                    <Link to="/auth/login" className="inline-block w-full px-6 py-3 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg font-medium transition-colors">
+                        Volver A Iniciar Session
                     </Link>
                 </div>
             )}

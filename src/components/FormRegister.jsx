@@ -17,12 +17,12 @@ export default function Register() {
         e.preventDefault();
 
         if (!isStrongPassword(password)) {
-            alert("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.");
+            setMessage("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.");
             return;
         }
 
         if (password !== confirm) {
-            alert("Las contraseñas no coinciden");
+            setMessage("Las contraseñas no coinciden");
             return;
         }
 
@@ -39,14 +39,14 @@ export default function Register() {
             if (res.ok) setSent(true);
             setMessage(data.message);
         } catch (error) {
-            console.log(error);
+            setMessage("Error en el servidor");
         }
     };
 
     if (sent) {
         return (
             <div className="w-full max-w-md rounded-2xl border border-slate-700/50 bg-[#111d2a]/90 p-8 text-white shadow-2xl">
-                <h2 className="text-2xl font-bold mb-2">📧 Revisa tu correo</h2>
+                <h2 className="text-2xl font-bold mb-2">Revisa tu correo</h2>
                 <p className="text-slate-300">
                     Hemos enviado un enlace de verificación a <strong>{email}</strong>
                 </p>
