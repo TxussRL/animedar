@@ -183,7 +183,7 @@ export default function Inici({ user }) {
                         </span>
                     </h1>
                     <p className="text-lg md:text-xl text-slate-300/80 mb-10 font-light max-w-xl mx-auto leading-relaxed">
-                        Rastrea, comparte y conecta con otros fans del anime y manga.
+                        Rastrea, comparte y conecta con otros fans del anime.
                     </p>
 
                     <form className="relative max-w-xl mx-auto mb-8" onSubmit={handleSearchSubmit}>
