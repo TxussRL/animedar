@@ -27,6 +27,8 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
     const [showListModal, setShowListModal] = useState(false);
     const [status, setStatus] = useState("watching");
     const [score, setScore] = useState("");
+    const [favorito, setFavorito] = useState(false);
+    const [episodiosVistos, setEpisodiosVistos] = useState(0);
     const [isInList, setIsInList] = useState(false);
 
     useEffect(() => {
@@ -89,7 +91,8 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                     imatge: anime?.coverImage?.large,
                     estat: status,
                     valoracio: score ? Number(score) : null,
-                    favorit: false
+                    favorit: favorito,
+                    episodios: episodiosVistos
                 })
             });
 
@@ -118,7 +121,8 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                     id_anime: Number(id),
                     estat: status,
                     valoracio: score ? Number(score) : null,
-
+                    favorit: favorito,
+                    episodios: episodiosVistos
                 })
             });
 
@@ -490,11 +494,35 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
             {/* POPUP LISTA */}
             {
                 showListModal && (
+                    
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
                         <div className="bg-[#121827] rounded-xl p-6 w-[90%] max-w-md text-white shadow-xl">
                             <h3 className="text-lg font-semibold mb-4">{isInList ? "Editar en mi lista" : "Añadir a mi lista"}</h3>
 
                             <div className="space-y-4">
+                            
+                            <button
+    onClick={() => setFavorito(!favorito)}
+    className="transition hover:scale-110 active:scale-95 cursor-pointer"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        className={`w-8 h-8 transition ${
+            favorito
+                ? "fill-red-500 text-red-500"
+                : "fill-white text-white"
+        }`}
+    >
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M20.16,5A6.29,6.29,0,0,0,12,4.36a6.27,6.27,0,0,0-8.16,9.48l6.21,6.22a2.78,2.78,0,0,0,3.9,0l6.21-6.22A6.27,6.27,0,0,0,20.16,5Zm-1.41,7.46-6.21,6.21a.76.76,0,0,1-1.08,0L5.25,12.43a4.29,4.29,0,0,1,0-6,4.27,4.27,0,0,1,6,0,1,1,0,0,0,1.42,0,4.27,4.27,0,0,1,6,0A4.29,4.29,0,0,1,18.75,12.43Z"
+        />
+    </svg>
+    {console.log(favorito)}
+</button>
+                            
                                 <div>
                                     <label className="text-sm text-slate-300">Estado</label>
                                     <select
@@ -518,6 +546,27 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                                         value={score}
                                         onChange={(e) => setScore(e.target.value)}
                                     />
+                                </div>
+
+                                <div className="mt-4">
+                                    <label className="text-white text-sm block mb-2">
+                                        Episodios vistos
+                                    </label>
+
+                                    <div className="flex items-center gap-3">
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max={anime?.episodes || 9999}
+                                            value={episodiosVistos}
+                                            onChange={(e) => setEpisodiosVistos(e.target.value)}
+                                            className="bg-[#1a2235] text-white px-3 py-2 rounded-lg w-24 outline-none"
+                                        />
+
+                                        <span className="text-slate-400 text-sm">
+                                            {episodiosVistos || 0}/ {anime?.episodes || "?"} episodios
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 

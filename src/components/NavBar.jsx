@@ -31,11 +31,16 @@ function Navbar({ user, onLogout }) {
             )
         },
         {
-            to: "/anime/forum", label: "Forum", activePatterns: ["/anime/forum"], icon: (
+            to: "/social", label: "Social", activePatterns: ["/social"], icon: (
                 <svg className="inline-block w-4 h-4 mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path d="M18.81,16.23,20,21l-4.95-2.48A9.84,9.84,0,0,1,12,19c-5,0-9-3.58-9-8s4-8,9-8,9,3.58,9,8A7.49,7.49,0,0,1,18.81,16.23Z" />
                 </svg>
             )
+        },
+        {
+            to: `/lista/${user?.nom_usuari}/${user?.id}`, 
+            label: "Mi Lista",
+             activePatterns: [`lista/${user?.nom_usuari}/${user?.id}`]
         },
     ];
 
@@ -107,7 +112,7 @@ function Navbar({ user, onLogout }) {
                                 </div>
 
                                 <div className="absolute right-0 mt-2 w-48 rounded-xl border border-slate-700/60 bg-[#111f2c]/95 backdrop-blur-xl shadow-xl shadow-black/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                                    <Link to={`/lista/${user.nom_usuari}`} className="block px-4 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-tl-xl rounded-tr-xl">Mi perfil</Link>
+                                    <Link to={`/lista/${user.nom_usuari}/${user?.id}`} className="block px-4 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-tl-xl rounded-tr-xl">Mi perfil</Link>
                                     <Link to="/settings" className="block px-4 py-2 text-sm text-slate-200 hover:bg-white/5">Settings</Link>
                                     <div className="h-px bg-slate-700/70 my-1"></div>
                                     <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-300 hover:bg-red-500/10 rounded-bl-xl rounded-br-xl">Salir</button>
@@ -171,7 +176,7 @@ function Navbar({ user, onLogout }) {
 
                                 {mobileProfileOpen && (
                                     <div className="pl-3 flex flex-col gap-1">
-                                        <Link to={`/lista/${user.nom_usuari}`} onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5">Mi perfil</Link>
+                                        <Link to={`/lista/${user.nom_usuari}/${user?.id}`} onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5">Mi perfil</Link>
                                         <Link to="/settings" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5">Settings</Link>
                                         <div className="h-px bg-slate-700/70 my-1"></div>
                                         <button

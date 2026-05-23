@@ -7,6 +7,7 @@ import AnimeRoutes from "./routes/AnimeRoutes";
 import Footer from "./components/Footer";
 import UserSettings from "./components/Settings";
 import PerfilLista from "./components/PerfilLista";
+import SocialFeed from "./components/Social";
 
 function App() {
   const [user, setUser] = useState(localStorage.getItem("user") || null);
@@ -81,7 +82,10 @@ function App() {
           <Route path="/anime/*" element={<AnimeRoutes user={user} mostrarAlerta={mostrarAlerta} />} />
 
           <Route path="/settings" element={<RequireAuth><UserSettings user={user} UpdateUser={handleUpdateUser} mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
-          <Route path="/lista/:username" element={<RequireAuth><PerfilLista usuario={user} mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
+
+          <Route path="/lista/:username/:id" element={<RequireAuth><PerfilLista mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
+          
+          <Route path="/social" element={<SocialFeed user={user} mostrarAlerta={mostrarAlerta} />} />
 
           <Route path="/login" element={<Navigate to="/auth/login" replace />} />
           <Route path="/register" element={<Navigate to="/auth/register" replace />} />
