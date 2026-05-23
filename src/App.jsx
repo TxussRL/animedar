@@ -81,7 +81,7 @@ function App() {
           <Route path="/anime/*" element={<AnimeRoutes user={user} mostrarAlerta={mostrarAlerta} />} />
 
           <Route path="/settings" element={<RequireAuth><UserSettings user={user} UpdateUser={handleUpdateUser} mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
-          <Route path="/lista/:username" element={<RequireAuth><PerfilLista usuario={user} /></RequireAuth>} />
+          <Route path="/lista/:username" element={<RequireAuth><PerfilLista usuario={user} mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
 
           <Route path="/login" element={<Navigate to="/auth/login" replace />} />
           <Route path="/register" element={<Navigate to="/auth/register" replace />} />

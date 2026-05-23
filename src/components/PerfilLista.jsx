@@ -10,7 +10,7 @@ const STATUS_LABELS = {
     dropped: "Dropped",
 };
 
-export default function PerfilLista({ usuario }) {
+export default function PerfilLista({ usuario, mostrarAlerta }) {
     const [user, setUser] = useState(null);
     const [animes, setAnimes] = useState([]);
     const [filter, setFilter] = useState("all");
@@ -53,6 +53,30 @@ export default function PerfilLista({ usuario }) {
 
         fetchList();
     }, [usuario.id]);
+
+    async function fetchEliminarLista(id_anime) {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lista/remove`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id_usuari: usuario?.id,
+                    id_anime: id_anime
+                })
+            });
+
+            const data = await res.json();
+
+            mostrarAlerta("Anime eliminado de tu lista");
+
+        } catch (err) {
+            console.error(err);
+            mostrarAlerta("Error al eliminar anime de tu lista");
+        }
+    }
 
     const filtered =
         filter === "all"
@@ -136,8 +160,31 @@ export default function PerfilLista({ usuario }) {
                                     onClick={() =>
                                         window.location.assign(`/anime/${anime.id_anime}`)
                                     }
-                                    className="bg-[#0B0F1A] rounded-xl p-2 hover:bg-[#1a2a3b] shadow cursor-pointer flex flex-col items-center transition"
+                                    className="relative group bg-[#0B0F1A] rounded-xl p-2 hover:bg-[#1a2a3b] shadow cursor-pointer flex flex-col items-center transition"
                                 >
+
+                                <button
+                                    className="cursor-pointer absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition bg-black/60 hover:bg-red-500 p-1 rounded-full"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        fetchEliminarLista(anime.id_anime);
+                                    }}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1}
+                                        stroke="currentColor"
+                                        className="w-6 h-6 text-white"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M6 7h12M9 7V4h6v3m-7 4v6m4-6v6m5 5H7a2 2 0 01-2-2V7h14v13a2 2 0 01-2 2z"
+                                        />
+                                    </svg>
+                                </button>
 
                                     {/* IMAGEN FIX RESPONSIVE */}
                                     <img
