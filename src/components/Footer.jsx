@@ -21,7 +21,7 @@ export default function Footer() {
                         <li><a href="/" className="hover:text-cyan-300">Inicio</a></li>
                         <li><a href="/anime/buscar" className="hover:text-cyan-300">Buscar</a></li>
                         <li><a href="/anime/top-100" className="hover:text-cyan-300">Top 100</a></li>
-                        <li><a href="/anime/social" className="hover:text-cyan-300">Comunidad</a></li>
+                        <li><a href="/social" className="hover:text-cyan-300">Comunidad</a></li>
                     </ul>
                 </div>
 
@@ -40,7 +40,6 @@ export default function Footer() {
                     <h3 className="text-white font-semibold mb-3">Recursos</h3>
                     <ul className="space-y-2">
                         <li><a href="/anime/top-100" className="hover:text-cyan-300">Los Mejores Animes</a></li>
-                        <li><a href="/anime/forum" className="hover:text-cyan-300">Foro</a></li>
                         <li><a href="https://docs.anilist.co/" target="_blank" rel="noreferrer" className="hover:text-cyan-300">AniList API GraphQL</a></li>
                     </ul>
                 </div>
