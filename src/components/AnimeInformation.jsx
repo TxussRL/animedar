@@ -549,7 +549,13 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                                     <select
                                         className="mt-1 w-full rounded-lg border border-slate-700 bg-[#0f1923] p-2"
                                         value={status}
-                                        onChange={(e) => setStatus(e.target.value)}
+                                        onChange={(e) => {
+                                            const nuevoEstado = e.target.value;
+                                            setStatus(nuevoEstado);
+                                            if (nuevoEstado === "completed" && anime?.episodes) {
+                                                setEpisodiosVistos(anime.episodes);
+                                            }
+                                        }}
                                     >
                                         <option value="watching">Watching</option>
                                         <option value="completed">Completed</option>
@@ -580,7 +586,10 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                                             min="0"
                                             max={anime?.episodes || 9999}
                                             value={episodiosVistos}
-                                            onChange={(e) => setEpisodiosVistos(e.target.value)}
+                                            onChange={(e) => {
+                                                const valor = Math.min(Number(e.target.value) || 0, anime?.episodes || 9999);
+                                                setEpisodiosVistos(valor);
+                                            }}
                                             className="bg-[#1a2235] text-white px-3 py-2 rounded-lg w-24 outline-none"
                                         />
 
