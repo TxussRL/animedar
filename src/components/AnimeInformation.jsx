@@ -568,10 +568,16 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                                 <div>
                                     <label className="text-sm text-slate-300">Puntuación</label>
                                     <input
+                                        type="number"
+                                        min="0"
+                                        max="10"
                                         className="mt-1 w-full rounded-lg border border-slate-700 bg-[#0f1923] p-2"
                                         placeholder="0 - 10"
                                         value={score}
-                                        onChange={(e) => setScore(e.target.value)}
+                                        onChange={(e) => {
+                                            const valor = Math.min(Math.max(Number(e.target.value) || 0, 0), 10);
+                                            setScore(valor);
+                                        }}
                                     />
                                 </div>
 

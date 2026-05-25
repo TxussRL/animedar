@@ -212,13 +212,19 @@ export default function PerfilLista({ mostrarAlerta }) {
                                         </div>
                                     )}
 
+                                    {anime.valoracio != null && anime.valoracio > 0 && (
+                                        <div className="text-yellow-300">
+                                            ★ {anime.valoracio}/10
+                                        </div>
+                                    )}
+
                                     <div>
                                         Estado: {STATUS_LABELS[anime.estat]}
                                     </div>
 
                                     {anime.favorit && (
                                         <div className="text-yellow-400">
-                                            ★ Favorito
+                                            ♥ Favorito
                                         </div>
                                     )}
 
