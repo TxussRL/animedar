@@ -132,7 +132,7 @@ export default function PerfilLista({ mostrarAlerta }) {
             <div className="flex flex-col md:flex-row px-4 md:px-8 py-6 gap-6">
 
                 {/* SIDEBAR */}
-                <aside className="w-full md:w-[220px] bg-[#1a2533] rounded-2xl p-4 text-white/80 shadow flex md:flex-col gap-2">
+                <aside className="w-full md:w-[220px] bg-[#1a2533] rounded-2xl p-4 text-white/80 shadow flex md:flex-col gap-2 overflow-x-auto">
                     {Object.entries(STATUS_LABELS).map(([key, label]) => (
                         <button
                             key={key}
