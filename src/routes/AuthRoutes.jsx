@@ -2,6 +2,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "../components/FormIniciarSessio";
 import Register from "../components/FormRegister";
 import VerifyEmail from "../components/VerifyEmail";
+import ForgotPassword from "../components/ForgotPassword";
+import ResetPassword from "../components/ResetPassword";
 
 function AuthRoutes({ onLogin, user }) {
     // auth/*
@@ -14,6 +16,8 @@ function AuthRoutes({ onLogin, user }) {
             />
             <Route path="register" element={<div className="flex justify-center items-center min-h-screen pt-20"><Register /></div>} />
             <Route path="verify-email" element={<div className="flex justify-center items-center min-h-screen pt-20"><VerifyEmail /></div>} />
+            <Route path="forgot-password" element={<div className="flex justify-center items-center min-h-screen pt-20"><ForgotPassword /></div>} />
+            <Route path="reset-password" element={<div className="flex justify-center items-center min-h-screen pt-20"><ResetPassword /></div>} />
             <Route path="*" element={<Navigate to="login" replace />} />
         </Routes>
     );
