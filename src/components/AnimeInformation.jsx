@@ -21,6 +21,7 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
     const [staff, setStaff] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
     const [relations, setRelations] = useState([]);
+    const [youtubeLink, setYoutubeLink] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState("info");
 
@@ -47,6 +48,7 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                 setStaff(json.data?.staff || []);
                 setRecommendations(json.data?.recommendations || []);
                 setRelations(json.data?.relations || []);
+                setYoutubeLink(json.data?.youtubeLink || null);
 
 
                 if (user?.id) {
@@ -421,6 +423,25 @@ export default function AnimeInformation({ user, mostrarAlerta }) {
                                 </div>
                             </div>
                         )}
+
+                        
+                        
+                            {youtubeLink && (
+                                    <div>
+                                    <h1>Trailer</h1>
+                                    <iframe
+                                        width="560"
+                                        height="315"
+                                        src={youtubeLink}
+                                        title={anime?.title?.english || anime?.title?.romaji}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerPolicy="strict-origin-when-cross-origin"
+                                        allowFullScreen
+                                    />
+                                    </div>
+                            )}
+                        
 
                         <div className="bg-[#121827] rounded-xl p-5">
                             <h3 className="font-semibold mb-3">Puntuación de los usuarios</h3>
