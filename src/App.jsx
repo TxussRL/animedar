@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import UserSettings from "./components/Settings";
 import PerfilLista from "./components/PerfilLista";
 import SocialFeed from "./components/Social";
+import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
   const [user, setUser] = useState(localStorage.getItem("user") || null);
@@ -51,12 +52,14 @@ function App() {
   const handleLogin = (token, userData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
+    setToken(token);
     setUser(userData);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    setToken(null);
     setUser(null);
   };
 
@@ -84,7 +87,13 @@ function App() {
           <Route path="/settings" element={<RequireAuth><UserSettings user={user} UpdateUser={handleUpdateUser} mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
 
           <Route path="/lista/:username/:id" element={<RequireAuth><PerfilLista mostrarAlerta={mostrarAlerta} /></RequireAuth>} />
-          
+
+          <Route path="/dashboard" element={
+            <RequireAuth>
+              {user?.is_admin ? <AdminDashboard token={token} /> : <Navigate to="/" replace />}
+            </RequireAuth>
+          } />
+
           <Route path="/social" element={<SocialFeed user={user} mostrarAlerta={mostrarAlerta} />} />
 
           <Route path="/login" element={<Navigate to="/auth/login" replace />} />
